@@ -1,4 +1,4 @@
-package com.andor.navigate.notepad.listing
+package com.andor.navigate.notepad.listing.fragment
 
 
 import android.app.Dialog
@@ -11,15 +11,27 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.ImageButton
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.andor.navigate.notepad.R
+import com.andor.navigate.notepad.listing.adapter.ListingAdapter
 import kotlinx.android.synthetic.main.fragment_note_listing.*
 
 
 class NoteListingFragment : Fragment() {
+    private lateinit var viewModel: NoteViewModel
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        viewModel = ViewModelProviders.of(activity!!).get(NoteViewModel::class.java)
+        hideKeyBoard()
+        setAddNoteClickEvent()
+        setUpListAdapter()
+    }
 
 
     override fun onCreateView(
@@ -28,13 +40,6 @@ class NoteListingFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_note_listing, container, false)
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        hideKeyBoard()
-        setAddNoteClickEvent()
-        setUpListAdapter()
     }
 
     private fun setAddNoteClickEvent() {
@@ -52,7 +57,9 @@ class NoteListingFragment : Fragment() {
                 val action = if (newHeadText.isBlank()) {
                     NoteListingFragmentDirections.actionNoteListingFragmentToAddNoteFragment()
                 } else {
-                    NoteListingFragmentDirections.actionNoteListingFragmentToAddNoteFragment(newHeadText)
+                    NoteListingFragmentDirections.actionNoteListingFragmentToAddNoteFragment(
+                        newHeadText
+                    )
                 }
                 dialog.cancel()
                 Navigation.findNavController(view!!).navigate(action)
@@ -70,13 +77,16 @@ class NoteListingFragment : Fragment() {
     }
 
     private fun setUpListAdapter() {
-        val contentList = NoteRepoImpl.getNotes()
-        val listingAdapter = ListingAdapter(context!!, contentList)
-        listRecyclerView.addItemDecoration(DividerItemDecoration(context, LinearLayoutManager.VERTICAL))
-        val linearLayoutManager = LinearLayoutManager(context)
-        linearLayoutManager.orientation = RecyclerView.VERTICAL
-        listRecyclerView.layoutManager = linearLayoutManager
-        listRecyclerView.adapter = listingAdapter
+        viewModel.allNotes.observe(this, Observer { notes ->
+            notes.let {
+                val listingAdapter = ListingAdapter(context!!, it)
+                listRecyclerView.addItemDecoration(DividerItemDecoration(context, LinearLayoutManager.VERTICAL))
+                val linearLayoutManager = LinearLayoutManager(context)
+                linearLayoutManager.orientation = RecyclerView.VERTICAL
+                listRecyclerView.layoutManager = linearLayoutManager
+                listRecyclerView.adapter = listingAdapter
+            }
+        })
     }
 
 
