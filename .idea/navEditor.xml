@@ -8,13 +8,25 @@
             <LayoutPositions>
               <option name="myPositions">
                 <map>
+                  <entry key="addNoteFragment">
+                    <value>
+                      <LayoutPositions>
+                        <option name="myPosition">
+                          <Point>
+                            <option name="x" value="100" />
+                            <option name="y" value="-333" />
+                          </Point>
+                        </option>
+                      </LayoutPositions>
+                    </value>
+                  </entry>
                   <entry key="expandedNoteFragment">
                     <value>
                       <LayoutPositions>
                         <option name="myPosition">
                           <Point>
-                            <option name="x" value="223" />
-                            <option name="y" value="5" />
+                            <option name="x" value="221" />
+                            <option name="y" value="224" />
                           </Point>
                         </option>
                       </LayoutPositions>
@@ -31,6 +43,11 @@
                         </option>
                         <option name="myPositions">
                           <map>
+                            <entry key="action_noteListingFragment_to_addNoteFragment">
+                              <value>
+                                <LayoutPositions />
+                              </value>
+                            </entry>
                             <entry key="action_noteListingFragment_to_expandedNoteFragment">
                               <value>
                                 <LayoutPositions />
