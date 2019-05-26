@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">NotePad</string>
+    <string name="action_settings">Settings</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="hint_notes">Note\'s are fetched from DB</string>
+    <string name="headText">head</string>
+    <string name="bodyText">body</string>
+</resources>
