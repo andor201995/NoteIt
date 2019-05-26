@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/noteListingFragment">
+
+    <fragment
+        android:id="@+id/noteListingFragment"
+        android:name="com.andor.navigate.notepad.listing.NoteListingFragment"
+        android:label="fragment_note_listing"
+        tools:layout="@layout/fragment_note_listing">
+        <action
+            android:id="@+id/action_noteListingFragment_to_expandedNoteFragment"
+            app:destination="@id/expandedNoteFragment">
+            <argument
+                android:name="headText"
+                android:defaultValue="HEAD"
+                app:argType="string" />
+            <argument
+                android:name="bodyText"
+                android:defaultValue="BODY"
+                app:argType="string" />
+        </action>
+    </fragment>
+    <fragment
+        android:id="@+id/expandedNoteFragment"
+        android:name="com.andor.navigate.notepad.expanded.ExpandedNoteFragment"
+        android:label="fragment_expanded_note"
+        tools:layout="@layout/fragment_expanded_note">
+        <argument
+            android:name="headText"
+            android:defaultValue="HEAD"
+            app:argType="string" />
+        <argument
+            android:name="bodyText"
+            android:defaultValue="BODY"
+            app:argType="string" />
+    </fragment>
+</navigation>
