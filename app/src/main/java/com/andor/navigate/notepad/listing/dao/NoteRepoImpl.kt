@@ -11,4 +11,8 @@ class NoteRepoImpl(private val noteDao: NoteDao) {
         noteDao.insert(noteModel)
     }
 
+    fun delete(selectedNotes: HashSet<String>) {
+        noteDao.delete(selectedNotes)
+    }
+
 }

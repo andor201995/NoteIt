@@ -25,4 +25,7 @@ class NoteViewModel(application: Application) : AndroidViewModel(application) {
         repository.insert(note)
     }
 
+    fun delete(selectedNotes: HashSet<String>) = viewModelScope.launch(Dispatchers.IO) {
+        repository.delete(selectedNotes)
+    }
 }

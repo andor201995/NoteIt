@@ -5,16 +5,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
 import com.andor.navigate.notepad.R
 import com.andor.navigate.notepad.listing.dao.NoteModel
-import com.andor.navigate.notepad.listing.fragment.NoteListingFragmentDirections
 
 
 class ListingAdapter(
     private val context: Context,
-    private val noteList: List<NoteModel>
+    private val noteList: List<NoteModel>,
+    val fragCallback: (ListItemEvent) -> Unit
 
 ) : RecyclerView.Adapter<ListingAdapter.ListingHolder>() {
 
@@ -31,6 +30,7 @@ class ListingAdapter(
     override fun onBindViewHolder(holder: ListingHolder, position: Int) {
         holder.headTxtView.text = noteList[position].noteHead
         holder.bodyTxtView.text = noteList[position].noteBody
+        holder.selectedItemView.inVisible()
 
     }
 
@@ -42,23 +42,49 @@ class ListingAdapter(
         return position
     }
 
-    inner class ListingHolder(view: View) : RecyclerView.ViewHolder(view), View.OnClickListener {
+    inner class ListingHolder(view: View) : RecyclerView.ViewHolder(view), View.OnClickListener,
+        View.OnLongClickListener {
+        val headTxtView: TextView = view.findViewById(R.id.noteHeadTxtView)
+        val bodyTxtView: TextView = view.findViewById(R.id.noteBodyTxtView)
+        val selectedItemView: View = view.findViewById(R.id.selectedItemView)
+
         init {
             view.setOnClickListener(this)
+            view.setOnLongClickListener(this)
+        }
+
+        override fun onLongClick(v: View?): Boolean {
+            selectedItemView.visible()
+            val noteModel = noteList[adapterPosition]
+            fragCallback.invoke(ListItemEvent.LongClickEvent(noteModel))
+            return true
         }
 
         override fun onClick(v: View?) {
-            val listModel = noteList[adapterPosition]
-            val action =
-                NoteListingFragmentDirections.actionNoteListingFragmentToExpandedNoteFragment(
-                    listModel.noteHead,
-                    listModel.noteBody
-                )
-            Navigation.findNavController(v!!).navigate(action)
+            if (selectedItemView.isVisible()) {
+                selectedItemView.inVisible()
+            } else {
+                selectedItemView.visible()
+            }
+            val noteModel = noteList[adapterPosition]
+            fragCallback.invoke(ListItemEvent.SingleClickEvent(noteModel))
         }
-
-        val headTxtView: TextView = view.findViewById(R.id.noteHeadTxtView)
-        val bodyTxtView: TextView = view.findViewById(R.id.noteBodyTxtView)
     }
 }
 
+sealed class ListItemEvent {
+    data class SingleClickEvent(val noteModel: NoteModel) : ListItemEvent()
+    data class LongClickEvent(val noteModel: NoteModel) : ListItemEvent()
+}
+
+fun View.visible() {
+    this.visibility = View.VISIBLE
+}
+
+fun View.inVisible() {
+    this.visibility = View.GONE
+}
+
+fun View.isVisible(): Boolean {
+    return this.visibility == View.VISIBLE
+}

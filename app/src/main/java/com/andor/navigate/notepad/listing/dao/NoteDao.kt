@@ -17,4 +17,7 @@ interface NoteDao {
 
     @Query("SELECT * from note_table ORDER BY head ASC")
     fun getAllNotes(): LiveData<List<NoteModel>>
+
+    @Query("DELETE FROM note_table WHERE head IN (:selectedNotes)")
+    fun delete(selectedNotes: HashSet<String>)
 }
