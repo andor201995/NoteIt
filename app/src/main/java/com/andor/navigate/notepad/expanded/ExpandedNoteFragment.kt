@@ -2,32 +2,51 @@ package com.andor.navigate.notepad.expanded
 
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.Navigation
 import com.andor.navigate.notepad.MainActivity
+import com.andor.navigate.notepad.R
+import com.andor.navigate.notepad.listing.fragment.NoteViewModel
 import kotlinx.android.synthetic.main.fragment_expanded_note.*
 
 
 class ExpandedNoteFragment : Fragment() {
+
+    private lateinit var viewModel: NoteViewModel
+
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        viewModel = ViewModelProviders.of(activity!!).get(NoteViewModel::class.java)
+        val bodyText = viewModel.selectedNote.value?.noteBody
+        expandedNoteTxt.text = bodyText
+
+        val headText = viewModel.selectedNote.value?.noteHead
+        headText?.let { (activity as MainActivity).setActionBarTitle(it) }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-
-        val headText = ExpandedNoteFragmentArgs.fromBundle(arguments!!).headText
-
-        (activity as MainActivity).setActionBarTitle(headText)
-
-        return inflater.inflate(com.andor.navigate.notepad.R.layout.fragment_expanded_note, container, false)
+        setHasOptionsMenu(true)
+        return inflater.inflate(R.layout.fragment_expanded_note, container, false)
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        val bodyText = ExpandedNoteFragmentArgs.fromBundle(arguments!!).bodyText
-        expandedNoteTxt.text = bodyText
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater!!.inflate(R.menu.expanded_note_option_menu, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        if (item!!.itemId == R.id.edit) {
+            val action =
+                ExpandedNoteFragmentDirections.actionExpandedNoteFragmentToUpdateNoteFragment(true)
+            Navigation.findNavController(view!!).navigate(action)
+        }
+        return super.onOptionsItemSelected(item)
     }
 }

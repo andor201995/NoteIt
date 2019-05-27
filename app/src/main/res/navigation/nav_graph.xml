@@ -12,46 +12,33 @@
         tools:layout="@layout/fragment_note_listing">
         <action
             android:id="@+id/action_noteListingFragment_to_expandedNoteFragment"
-            app:destination="@id/expandedNoteFragment">
-            <argument
-                android:name="headText"
-                android:defaultValue="HEAD"
-                app:argType="string" />
-            <argument
-                android:name="bodyText"
-                android:defaultValue="BODY"
-                app:argType="string" />
-        </action>
+            app:destination="@id/expandedNoteFragment" />
         <action
-            android:id="@+id/action_noteListingFragment_to_addNoteFragment"
-            app:destination="@id/addNoteFragment">
-            <argument
-                android:name="headText"
-                android:defaultValue="HEAD"
-                app:argType="string" />
-        </action>
+            android:id="@+id/action_noteListingFragment_to_updateNoteFragment"
+            app:destination="@id/updateNoteFragment" />
     </fragment>
     <fragment
         android:id="@+id/expandedNoteFragment"
         android:name="com.andor.navigate.notepad.expanded.ExpandedNoteFragment"
         tools:layout="@layout/fragment_expanded_note">
-        <argument
-            android:name="headText"
-            android:defaultValue="HEAD"
-            app:argType="string" />
-        <argument
-            android:name="bodyText"
-            android:defaultValue="BODY"
-            app:argType="string" />
+        <action
+            android:id="@+id/action_expandedNoteFragment_to_updateNoteFragment"
+            app:destination="@id/updateNoteFragment">
+            <argument
+                android:name="editMode"
+                android:defaultValue="true"
+                app:argType="boolean" />
+        </action>
     </fragment>
     <fragment
-        android:id="@+id/addNoteFragment"
-        android:name="com.andor.navigate.notepad.listing.fragment.AddNoteFragment"
-        android:label="Add Note"
-        tools:layout="@layout/fragment_add_note">
+        android:id="@+id/updateNoteFragment"
+        android:name="com.andor.navigate.notepad.editing.UpdateNoteBodyFragment"
+        android:label="Update Note"
+        tools:layout="@layout/fragment_update_note">
         <argument
-            android:name="headText"
-            android:defaultValue="HEAD"
-            app:argType="string" />
+            android:name="editMode"
+            android:defaultValue="false"
+            app:argType="boolean" />
+
     </fragment>
 </navigation>
