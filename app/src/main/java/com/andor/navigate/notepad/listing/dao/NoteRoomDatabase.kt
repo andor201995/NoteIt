@@ -10,7 +10,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 @Database(entities = [NoteModel::class], version = 1)
-public abstract class NoteRoomDatabase : RoomDatabase() {
+abstract class NoteRoomDatabase : RoomDatabase() {
     abstract fun noteDao(): NoteDao
 
     companion object {

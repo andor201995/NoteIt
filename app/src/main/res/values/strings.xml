@@ -12,4 +12,5 @@
     <string name="new_hading_accepted">new hading accepted</string>
     <string name="new_heading_rejected">new Heading rejected</string>
     <string name="delete">Delete</string>
+    <string name="edit">Edit</string>
 </resources>

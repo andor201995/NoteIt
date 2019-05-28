@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.andor.navigate.notepad.R
 import com.andor.navigate.notepad.listing.dao.NoteModel
@@ -42,6 +43,13 @@ class ListingAdapter(
         return position
     }
 
+    fun updateRecyclerView(newNoteList: List<NoteModel>) {
+        val diffResult = DiffUtil.calculateDiff(MyDiffCallback(this.noteList, newNoteList))
+        (this.noteList as ArrayList).clear()
+        this.noteList.addAll(newNoteList)
+        diffResult.dispatchUpdatesTo(this)
+    }
+
     inner class ListingHolder(view: View) : RecyclerView.ViewHolder(view), View.OnClickListener,
         View.OnLongClickListener {
         val headTxtView: TextView = view.findViewById(R.id.noteHeadTxtView)
@@ -70,6 +78,26 @@ class ListingAdapter(
             fragCallback.invoke(ListItemEvent.SingleClickEvent(noteModel))
         }
     }
+}
+
+class MyDiffCallback(private val oldNoteList: List<NoteModel>, private val newNoteList: List<NoteModel>) :
+    DiffUtil.Callback() {
+    override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+        return oldNoteList[oldItemPosition].noteHead == newNoteList[newItemPosition].noteHead
+    }
+
+    override fun getOldListSize(): Int {
+        return oldNoteList.size
+    }
+
+    override fun getNewListSize(): Int {
+        return newNoteList.size
+    }
+
+    override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+        return oldNoteList[oldItemPosition] == newNoteList[newItemPosition];
+    }
+
 }
 
 sealed class ListItemEvent {

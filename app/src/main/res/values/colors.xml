@@ -4,4 +4,5 @@
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
     <color name="selected">#563F51B5</color>
+    <color name="longPressActionMenu">#3F51B5</color>
 </resources>
