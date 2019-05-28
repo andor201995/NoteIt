@@ -73,7 +73,7 @@ class NoteListingFragment : Fragment() {
                     this@NoteListingFragment.longPressActionMode = null
                     selectedNotes.clear()
                     isLongPressed = false
-                    setUpListAdapter()
+                    listRecyclerView.adapter?.notifyDataSetChanged()
                 }
 
             }
@@ -113,38 +113,42 @@ class NoteListingFragment : Fragment() {
 
     private fun setUpListAdapter() {
         viewModel.allNotes.observe(this, Observer { notes ->
-            notes.let { note ->
-                val listingAdapter = ListingAdapter(context!!, note) {
-                    when (it) {
-                        is ListItemEvent.SingleClickEvent -> {
-                            if (!isLongPressed) {
-                                viewModel.selectedNote.postValue(it.noteModel)
-                                val action =
-                                    NoteListingFragmentDirections.actionNoteListingFragmentToExpandedNoteFragment()
-                                Navigation.findNavController(view!!).navigate(action)
-                            } else {
-                                if (selectedNotes.contains(it.noteModel.noteHead)) {
-                                    selectedNotes.remove(it.noteModel.noteHead)
-                                    if (selectedNotes.size == 0) {
-                                        longPressActionMode?.finish()
-                                    }
+            notes.let { noteList ->
+                if (listRecyclerView.adapter == null) {
+                    val listingAdapter = ListingAdapter(context!!, noteList) {
+                        when (it) {
+                            is ListItemEvent.SingleClickEvent -> {
+                                if (!isLongPressed) {
+                                    viewModel.selectedNote.postValue(it.noteModel)
+                                    val action =
+                                        NoteListingFragmentDirections.actionNoteListingFragmentToExpandedNoteFragment()
+                                    Navigation.findNavController(view!!).navigate(action)
                                 } else {
-                                    selectedNotes.add(it.noteModel.noteHead)
+                                    if (selectedNotes.contains(it.noteModel.noteHead)) {
+                                        selectedNotes.remove(it.noteModel.noteHead)
+                                        if (selectedNotes.size == 0) {
+                                            longPressActionMode?.finish()
+                                        }
+                                    } else {
+                                        selectedNotes.add(it.noteModel.noteHead)
+                                    }
                                 }
                             }
-                        }
-                        is ListItemEvent.LongClickEvent -> {
-                            isLongPressed = true
-                            selectedNotes.add(it.noteModel.noteHead)
-                            activity!!.invalidateOptionsMenu()
+                            is ListItemEvent.LongClickEvent -> {
+                                isLongPressed = true
+                                selectedNotes.add(it.noteModel.noteHead)
+                                activity!!.invalidateOptionsMenu()
+                            }
                         }
                     }
+                    listRecyclerView.addItemDecoration(DividerItemDecoration(context, LinearLayoutManager.VERTICAL))
+                    val linearLayoutManager = LinearLayoutManager(context)
+                    linearLayoutManager.orientation = RecyclerView.VERTICAL
+                    listRecyclerView.layoutManager = linearLayoutManager
+                    listRecyclerView.adapter = listingAdapter
+                } else {
+                    (listRecyclerView.adapter as ListingAdapter).updateRecyclerView(noteList)
                 }
-                listRecyclerView.addItemDecoration(DividerItemDecoration(context, LinearLayoutManager.VERTICAL))
-                val linearLayoutManager = LinearLayoutManager(context)
-                linearLayoutManager.orientation = RecyclerView.VERTICAL
-                listRecyclerView.layoutManager = linearLayoutManager
-                listRecyclerView.adapter = listingAdapter
             }
         })
     }
