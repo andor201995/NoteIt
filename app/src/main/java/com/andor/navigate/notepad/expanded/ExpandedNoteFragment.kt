@@ -2,8 +2,10 @@ package com.andor.navigate.notepad.expanded
 
 
 import android.os.Bundle
+import android.text.method.ScrollingMovementMethod
 import android.view.*
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.Navigation
 import com.andor.navigate.notepad.MainActivity
@@ -20,11 +22,11 @@ class ExpandedNoteFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProviders.of(activity!!).get(NoteViewModel::class.java)
-        val bodyText = viewModel.selectedNote.value?.noteBody
-        expandedNoteTxt.text = bodyText
-
-        val headText = viewModel.selectedNote.value?.noteHead
-        headText?.let { (activity as MainActivity).setActionBarTitle(it) }
+        expandedNoteTxt.movementMethod = ScrollingMovementMethod()
+        viewModel.selectedNote.observe(this, Observer {
+            expandedNoteTxt.text = it.noteBody
+            (activity as MainActivity).setActionBarTitle(it.noteHead)
+        })
     }
 
     override fun onCreateView(
