@@ -5,4 +5,6 @@
     <color name="colorAccent">#D81B60</color>
     <color name="selected">#563F51B5</color>
     <color name="longPressActionMenu">#3F51B5</color>
+    <color name="login">#00BCD4</color>
+    <color name="loading">#5636B4C4</color>
 </resources>
