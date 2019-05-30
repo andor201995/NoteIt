@@ -5,9 +5,25 @@ import android.app.Dialog
 import android.content.Context
 import android.util.Log
 import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.firebase.auth.AuthCredential
 import com.google.firebase.auth.FirebaseAuth
 
 class UserAuthentication(private val iTalkToUI: ITalkToUI) : UserAuth {
+    override fun signInGoogleUser(credential: AuthCredential, activity: Activity) {
+        fireBaseAuth.signInWithCredential(credential)
+            .addOnCompleteListener(activity) { task ->
+                if (task.isSuccessful) {
+                    // Sign in success, update UI with the signed-in user's information
+                    Log.d(TAG, "signInWithCredential:success")
+                    val user = fireBaseAuth.currentUser
+                    iTalkToUI.signingInSuccess(UserModel(user!!.displayName))
+                } else {
+                    Log.w(TAG, "signInWithCredential:failure", task.exception)
+                    iTalkToUI.signingInFailed()
+                }
+            }
+    }
+
     override fun signUpFireBaseUser(
         email: String,
         password: String,

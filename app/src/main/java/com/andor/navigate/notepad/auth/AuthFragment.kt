@@ -15,6 +15,7 @@ import androidx.appcompat.widget.AppCompatButton
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.Navigation
+import androidx.navigation.Navigation.findNavController
 import com.andor.navigate.notepad.R
 import com.andor.navigate.notepad.listing.fragment.NoteViewModel
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -23,6 +24,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
+import com.google.firebase.auth.GoogleAuthProvider
 import kotlinx.android.synthetic.main.fragment_auth.*
 import java.util.*
 
@@ -38,6 +40,7 @@ class AuthFragment : Fragment(), ITalkToUI {
         super.onCreate(savedInstanceState)
 
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken(getString(R.string.request_id_token))
             .requestEmail()
             .build()
         mGoogleSignInClient = GoogleSignIn.getClient(activity!!, gso)
@@ -54,22 +57,25 @@ class AuthFragment : Fragment(), ITalkToUI {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProviders.of(activity!!).get(NoteViewModel::class.java)
-        hideProgressBar()
-        mUserAuth.isUserSignedIn(context!!)
-
         btn_login.setOnClickListener(object : DebouncedOnClickListener(1000) {
             override fun onDebouncedClick(v: View) {
                 signInUser(input_email.text.toString(), input_password.text.toString())
             }
 
         })
-
         signUpByMailButtonSetup()
         btn_google_login.setOnClickListener {
             val signInIntent = mGoogleSignInClient.signInIntent
+            progressBar.show()
             startActivityForResult(signInIntent, tagGoogleSignIn)
         }
 
+    }
+
+    override fun onStart() {
+        super.onStart()
+        hideProgressBar()
+        mUserAuth.isUserSignedIn(context!!)
     }
 
     private fun signUpByMailButtonSetup() {
@@ -120,6 +126,7 @@ class AuthFragment : Fragment(), ITalkToUI {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == tagGoogleSignIn) {
+            progressBar.hide()
             val task = GoogleSignIn.getSignedInAccountFromIntent(data)
             handleSignInResult(task)
         }
@@ -128,7 +135,8 @@ class AuthFragment : Fragment(), ITalkToUI {
     private fun handleSignInResult(completedTask: Task<GoogleSignInAccount>) {
         try {
             val account = completedTask.getResult(ApiException::class.java)
-            signingInSuccess(UserModel(account!!.displayName))
+            val credential = GoogleAuthProvider.getCredential(account!!.idToken, null)
+            mUserAuth.signInGoogleUser(credential, activity!!)
         } catch (e: ApiException) {
             Log.w(UserAuthentication.TAG, "signInResult:failed code=" + e.statusCode)
         }
@@ -136,7 +144,7 @@ class AuthFragment : Fragment(), ITalkToUI {
 
     override fun signingInSuccess(userModel: UserModel) {
         hideProgressBar()
-        Navigation.findNavController(view!!).navigate(R.id.action_authFragment_to_noteListingFragment)
+        findNavController(view!!).navigate(R.id.action_authFragment_to_noteListingFragment)
     }
 
     override fun signingInFailed() {
