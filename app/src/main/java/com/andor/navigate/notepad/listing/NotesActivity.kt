@@ -1,26 +1,29 @@
-package com.andor.navigate.notepad
+package com.andor.navigate.notepad.listing
 
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
-import kotlinx.android.synthetic.main.activity_main.*
+import com.andor.navigate.notepad.R
+import com.andor.navigate.notepad.listing.fragment.NoteViewModel
+import kotlinx.android.synthetic.main.activity_listing.*
 import kotlinx.android.synthetic.main.content_main.*
 
-class MainActivity : AppCompatActivity() {
+class NotesActivity : AppCompatActivity() {
+    private lateinit var viewModel: NoteViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_listing)
         setSupportActionBar(toolbar)
         val appBarConfiguration = AppBarConfiguration
             .Builder(
-                R.id.noteListingFragment,
-                R.id.authFragment
+                R.id.noteListingFragment
             )
             .build()
         NavigationUI.setupActionBarWithNavController(
@@ -28,6 +31,8 @@ class MainActivity : AppCompatActivity() {
             NavHostFragment.findNavController(nav_host),
             appBarConfiguration
         )
+        viewModel = ViewModelProviders.of(this).get(NoteViewModel::class.java)
+        viewModel.uid = intent?.getStringExtra("uid")!!
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

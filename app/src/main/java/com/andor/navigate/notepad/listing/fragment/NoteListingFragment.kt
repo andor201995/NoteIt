@@ -16,7 +16,7 @@ import androidx.navigation.Navigation
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.andor.navigate.notepad.MainActivity
+import com.andor.navigate.notepad.listing.NotesActivity
 import com.andor.navigate.notepad.R
 import com.andor.navigate.notepad.listing.adapter.ListItemEvent
 import com.andor.navigate.notepad.listing.adapter.ListingAdapter
@@ -80,7 +80,7 @@ class NoteListingFragment : Fragment() {
 
             }
             if (longPressActionMode == null) {
-                (activity!! as MainActivity).startSupportActionMode(actionModeCallback)
+                (activity!! as NotesActivity).startSupportActionMode(actionModeCallback)
             }
         }
     }

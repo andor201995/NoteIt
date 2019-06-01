@@ -10,7 +10,7 @@ import android.widget.EditText
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
-import com.andor.navigate.notepad.MainActivity
+import com.andor.navigate.notepad.listing.NotesActivity
 import com.andor.navigate.notepad.R
 import com.andor.navigate.notepad.listing.dao.NoteModel
 import com.andor.navigate.notepad.listing.fragment.NoteViewModel
@@ -32,7 +32,7 @@ class UpdateNoteBodyFragment : Fragment() {
             setSaveAfterDebounceTime(newNoteBodyTxt)
         }
         val headText = viewModel.selectedNote.value?.noteHead
-        headText?.let { (activity as MainActivity).setActionBarTitle(it) }
+        headText?.let { (activity as NotesActivity).setActionBarTitle(it) }
     }
 
     private fun setSaveAfterDebounceTime(editText: EditText) {
