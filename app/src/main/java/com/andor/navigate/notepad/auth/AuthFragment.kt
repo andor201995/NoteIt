@@ -4,7 +4,6 @@ package com.andor.navigate.notepad.auth
 import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
-import android.os.SystemClock
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -14,9 +13,9 @@ import android.widget.Toast
 import androidx.appcompat.widget.AppCompatButton
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
-import androidx.navigation.Navigation
 import androidx.navigation.Navigation.findNavController
 import com.andor.navigate.notepad.R
+import com.andor.navigate.notepad.core.DebouncedOnClickListener
 import com.andor.navigate.notepad.listing.fragment.NoteViewModel
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
@@ -26,10 +25,14 @@ import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.GoogleAuthProvider
 import kotlinx.android.synthetic.main.fragment_auth.*
-import java.util.*
 
 
 class AuthFragment : Fragment(), ITalkToUI {
+
+    override fun createUserInDB(uid: String) {
+        viewModel.addNewUserData(uid)
+    }
+
     private lateinit var mUserAuth: UserAuth
     private lateinit var mGoogleSignInClient: GoogleSignInClient
     private lateinit var viewModel: NoteViewModel
@@ -86,12 +89,14 @@ class AuthFragment : Fragment(), ITalkToUI {
             val createAccountBtn = dialog.findViewById<AppCompatButton>(R.id.btn_create)
             val inputEmail = dialog.findViewById<EditText>(R.id.input_create_email)
             val inputPass = dialog.findViewById<EditText>(R.id.input_create_password)
+            val inputName = dialog.findViewById<EditText>(R.id.input_create_name)
 
             createAccountBtn.setOnClickListener(object : DebouncedOnClickListener(1000) {
                 override fun onDebouncedClick(v: View) {
                     registerUser(
                         inputEmail.text.toString().trim(),
                         inputPass.text.toString().trim(),
+                        inputName.text.toString().trim(),
                         dialog
                     )
                 }
@@ -117,10 +122,10 @@ class AuthFragment : Fragment(), ITalkToUI {
         return false
     }
 
-    private fun registerUser(email: String, password: String, dialog: Dialog) {
+    private fun registerUser(email: String, password: String, name: String, dialog: Dialog) {
         if (isCredentialEmpty(email, password)) return
         showProgressBar()
-        mUserAuth.signUpFireBaseUser(email, password, activity!!, dialog)
+        mUserAuth.signUpFireBaseUser(email, password, name, activity!!, dialog)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -160,24 +165,3 @@ class AuthFragment : Fragment(), ITalkToUI {
 
 
 }
-
-abstract class DebouncedOnClickListener
-    (private val minimumInterval: Long) : View.OnClickListener {
-    private val lastClickMap: MutableMap<View, Long>
-    abstract fun onDebouncedClick(v: View)
-
-    init {
-        this.lastClickMap = WeakHashMap()
-    }
-
-    override fun onClick(clickedView: View) {
-        val previousClickTimestamp = lastClickMap[clickedView]
-        val currentTimestamp = SystemClock.uptimeMillis()
-
-        lastClickMap[clickedView] = currentTimestamp
-        if (previousClickTimestamp == null || Math.abs(currentTimestamp - previousClickTimestamp.toLong()) > minimumInterval) {
-            onDebouncedClick(clickedView)
-        }
-    }
-}
-

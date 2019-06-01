@@ -15,7 +15,7 @@ class NoteViewModel(application: Application) : AndroidViewModel(application) {
 
     val selectedNote = MutableLiveData<NoteModel>()
     private val repository: NoteRepoImpl
-    val allNotes: LiveData<List<NoteModel>>
+    val allNotes: LiveData<HashMap<String, NoteModel>>
 
     init {
         val noteDao = NoteRoomDatabase.getDatabase(application, viewModelScope).noteDao()
@@ -30,4 +30,13 @@ class NoteViewModel(application: Application) : AndroidViewModel(application) {
     fun delete(selectedNotes: HashSet<String>) = viewModelScope.launch(Dispatchers.IO) {
         repository.delete(selectedNotes)
     }
+
+    fun addNewUserData(uid: String) {
+        repository.insertUser(uid)
+    }
+
+    fun fetchUserNotes() = viewModelScope.launch(Dispatchers.IO) {
+        repository.getAllNotes()
+    }
+
 }

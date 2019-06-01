@@ -4,6 +4,7 @@ package com.andor.navigate.notepad.listing.fragment
 import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
+import android.util.SparseArray
 import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
@@ -35,6 +36,7 @@ class NoteListingFragment : Fragment() {
         hideKeyBoard()
         setAddNoteClickEvent()
         setUpListAdapter()
+        viewModel.fetchUserNotes()
     }
 
 
@@ -113,30 +115,38 @@ class NoteListingFragment : Fragment() {
 
     private fun setUpListAdapter() {
         viewModel.allNotes.observe(this, Observer { notes ->
-            notes.let { noteList ->
+            notes.let { noteMap ->
+
+                val noteList = SparseArray<MutableMap.MutableEntry<String, NoteModel>>()
+                var index = 0
+                noteMap.entries.forEach {
+                    noteList.put(index, it)
+                    index++
+                }
+
                 if (listRecyclerView.adapter == null) {
                     val listingAdapter = ListingAdapter(context!!, noteList) {
                         when (it) {
                             is ListItemEvent.SingleClickEvent -> {
                                 if (!isLongPressed) {
-                                    viewModel.selectedNote.postValue(it.noteModel)
+                                    viewModel.selectedNote.postValue(noteMap.get(it.noteModel))
                                     val action =
                                         NoteListingFragmentDirections.actionNoteListingFragmentToExpandedNoteFragment()
                                     Navigation.findNavController(view!!).navigate(action)
                                 } else {
-                                    if (selectedNotes.contains(it.noteModel.noteHead)) {
-                                        selectedNotes.remove(it.noteModel.noteHead)
+                                    if (selectedNotes.contains(it.noteModel)) {
+                                        selectedNotes.remove(it.noteModel)
                                         if (selectedNotes.size == 0) {
                                             longPressActionMode?.finish()
                                         }
                                     } else {
-                                        selectedNotes.add(it.noteModel.noteHead)
+                                        selectedNotes.add(it.noteModel)
                                     }
                                 }
                             }
                             is ListItemEvent.LongClickEvent -> {
                                 isLongPressed = true
-                                selectedNotes.add(it.noteModel.noteHead)
+                                selectedNotes.add(it.noteModel)
                                 activity!!.invalidateOptionsMenu()
                             }
                         }

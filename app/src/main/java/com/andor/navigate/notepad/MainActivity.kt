@@ -21,7 +21,7 @@ class MainActivity : AppCompatActivity() {
             .Builder(
                 R.id.noteListingFragment,
                 R.id.authFragment
-                )
+            )
             .build()
         NavigationUI.setupActionBarWithNavController(
             this,

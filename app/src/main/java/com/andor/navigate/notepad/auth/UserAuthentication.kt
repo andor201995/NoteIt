@@ -7,8 +7,15 @@ import android.util.Log
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.firebase.auth.AuthCredential
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.UserProfileChangeRequest
 
 class UserAuthentication(private val iTalkToUI: ITalkToUI) : UserAuth {
+
+    companion object {
+        val fireBaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
+        const val TAG: String = "AUTH"
+    }
+
     override fun signInGoogleUser(credential: AuthCredential, activity: Activity) {
         fireBaseAuth.signInWithCredential(credential)
             .addOnCompleteListener(activity) { task ->
@@ -16,7 +23,8 @@ class UserAuthentication(private val iTalkToUI: ITalkToUI) : UserAuth {
                     // Sign in success, update UI with the signed-in user's information
                     Log.d(TAG, "signInWithCredential:success")
                     val user = fireBaseAuth.currentUser
-                    iTalkToUI.signingInSuccess(UserModel(user!!.displayName))
+                    iTalkToUI.createUserInDB(user!!.uid)
+                    iTalkToUI.signingInSuccess(UserModel(user.displayName))
                 } else {
                     Log.w(TAG, "signInWithCredential:failure", task.exception)
                     iTalkToUI.signingInFailed()
@@ -24,9 +32,10 @@ class UserAuthentication(private val iTalkToUI: ITalkToUI) : UserAuth {
             }
     }
 
+
     override fun signUpFireBaseUser(
         email: String,
-        password: String,
+        password: String, displayName: String,
         activity: Activity,
         dialog: Dialog
     ) {
@@ -36,8 +45,12 @@ class UserAuthentication(private val iTalkToUI: ITalkToUI) : UserAuth {
                     // Sign in success, update UI with the signed-in user's information
                     Log.d(TAG, "createUserWithEmail:success")
                     val user = fireBaseAuth.currentUser
+                    val profileBuilder = UserProfileChangeRequest.Builder()
+                    profileBuilder.setDisplayName(displayName)
+                    user!!.updateProfile(profileBuilder.build())
                     dialog.cancel()
-                    iTalkToUI.signingInSuccess(UserModel(user!!.displayName))
+                    iTalkToUI.createUserInDB(user.uid)
+                    iTalkToUI.signingInSuccess(UserModel(user.displayName))
                 } else {
                     // If sign in fails, display a message to the user.
                     Log.w(TAG, "createUserWithEmail:failure", task.exception)
@@ -45,7 +58,6 @@ class UserAuthentication(private val iTalkToUI: ITalkToUI) : UserAuth {
                 }
             }
     }
-
 
     override fun signInFireBaseUser(email: String, password: String, activity: Activity) {
         if (fireBaseAuth.currentUser == null) {
@@ -63,11 +75,6 @@ class UserAuthentication(private val iTalkToUI: ITalkToUI) : UserAuth {
                     }
                 }
         }
-    }
-
-    companion object {
-        val fireBaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
-        const val TAG: String = "AUTH"
     }
 
 
