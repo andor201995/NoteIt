@@ -58,8 +58,8 @@ dependencies {
     implementation 'androidx.recyclerview:recyclerview:1.0.0'
 
     //Navigation
-    implementation 'android.arch.navigation:navigation-fragment:1.0.0'
-    implementation 'android.arch.navigation:navigation-ui:1.0.0'
+    implementation 'androidx.navigation:navigation-fragment:2.1.0-alpha04'
+    implementation 'androidx.navigation:navigation-ui:2.1.0-alpha04'
 
     // Room components
     implementation "androidx.room:room-runtime:$rootProject.roomVersion"

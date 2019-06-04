@@ -14,6 +14,6 @@ interface UserAuth {
         activity: Activity,
         dialog: Dialog
     )
-
     fun signInGoogleUser(credential: AuthCredential, activity: Activity)
+    fun logout()
 }

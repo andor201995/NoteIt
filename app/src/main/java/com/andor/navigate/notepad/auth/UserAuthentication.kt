@@ -12,9 +12,10 @@ import com.google.firebase.firestore.FirebaseFirestore
 
 class UserAuthentication(private val iTalkToUI: ITalkToUI) : UserAuth {
     private val fireBaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
-    private val firebaseFirestore = FirebaseFirestore.getInstance()
+    private val fireBaseFireStore = FirebaseFirestore.getInstance()
 
     companion object {
+        const val LOGOUT: String = "LOGOUT"
         const val TAG: String = "AUTH"
     }
 
@@ -25,7 +26,7 @@ class UserAuthentication(private val iTalkToUI: ITalkToUI) : UserAuth {
                     // Sign in success, update UI with the signed-in user's information
                     Log.d(TAG, "signInWithCredential:success")
                     val user = fireBaseAuth.currentUser
-                    createUserInDB(user!!)
+                    createUserIfNeeded(user!!)
                     iTalkToUI.signingInSuccess(user)
                 } else {
                     Log.w(TAG, "signInWithCredential:failure", task.exception)
@@ -51,7 +52,7 @@ class UserAuthentication(private val iTalkToUI: ITalkToUI) : UserAuth {
                     profileBuilder.setDisplayName(displayName)
                     user!!.updateProfile(profileBuilder.build())
                     dialog.cancel()
-                    createUserInDB(user)
+                    createUserIfNeeded(user)
                     iTalkToUI.signingInSuccess(user)
                 } else {
                     // If sign in fails, display a message to the user.
@@ -61,10 +62,15 @@ class UserAuthentication(private val iTalkToUI: ITalkToUI) : UserAuth {
             }
     }
 
-    private fun createUserInDB(user: FirebaseUser) {
-        val defaultData = hashMapOf("head" to "Hello", "body" to "Welcome to NoteIt...")
-        firebaseFirestore.collection("Users").document(user.uid).collection("Notes").document("default")
-            .set(defaultData)
+    private fun createUserIfNeeded(user: FirebaseUser) {
+        fireBaseFireStore.collection("Users").document(user.uid).get().addOnCompleteListener {
+            if (it.isSuccessful && !it.result!!.exists()) {
+                val defaultData = hashMapOf("head" to "Hello", "body" to "Welcome to NoteIt...")
+                fireBaseFireStore.collection("Users").document(user.uid).collection("Notes").document("Default")
+                    .set(defaultData)
+            }
+        }
+
     }
 
     override fun signInFireBaseUser(email: String, password: String, activity: Activity) {
@@ -94,4 +100,7 @@ class UserAuthentication(private val iTalkToUI: ITalkToUI) : UserAuth {
         }
     }
 
+    override fun logout() {
+        fireBaseAuth.signOut()
+    }
 }

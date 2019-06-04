@@ -8,8 +8,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.Navigation
-import com.andor.navigate.notepad.listing.NotesActivity
 import com.andor.navigate.notepad.R
+import com.andor.navigate.notepad.listing.NotesActivity
 import com.andor.navigate.notepad.listing.fragment.NoteViewModel
 import kotlinx.android.synthetic.main.fragment_expanded_note.*
 
@@ -24,8 +24,8 @@ class ExpandedNoteFragment : Fragment() {
         viewModel = ViewModelProviders.of(activity!!).get(NoteViewModel::class.java)
         expandedNoteTxt.movementMethod = ScrollingMovementMethod()
         viewModel.selectedNote.observe(this, Observer {
-            expandedNoteTxt.text = it.noteBody
-            (activity as NotesActivity).setActionBarTitle(it.noteHead)
+            expandedNoteTxt.text = it.body
+            (activity as NotesActivity).setActionBarTitle(it.head)
         })
     }
 
@@ -38,13 +38,13 @@ class ExpandedNoteFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_expanded_note, container, false)
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
-        inflater!!.inflate(R.menu.expanded_note_option_menu, menu)
+        inflater.inflate(R.menu.expanded_note_option_menu, menu)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        if (item!!.itemId == R.id.edit) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == R.id.edit) {
             val action =
                 ExpandedNoteFragmentDirections.actionExpandedNoteFragmentToUpdateNoteFragment(true)
             Navigation.findNavController(view!!).navigate(action)

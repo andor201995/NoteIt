@@ -1,6 +1,7 @@
 package com.andor.navigate.notepad.auth
 
 import android.app.Dialog
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -40,8 +41,12 @@ class AuthActivity : AppCompatActivity(), ITalkToUI {
 
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso)
         mUserAuth = UserAuthentication(this)
-
-        mUserAuth.isUserSignedIn(this)
+        val logout = intent?.getBooleanExtra(UserAuthentication.LOGOUT, false)!!
+        if (!logout) {
+            mUserAuth.isUserSignedIn(this)
+        } else {
+            mUserAuth.logout()
+        }
 
         hideProgressBar()
 
@@ -148,7 +153,7 @@ class AuthActivity : AppCompatActivity(), ITalkToUI {
     }
 
     private fun startListingActivityForSignedInUser(user: FirebaseUser) {
-        val intent = Intent(this, NotesActivity::class.java)
+        val intent = NotesActivity.intent(this)
         intent.putExtra("uid", user.uid)
         startActivity(intent)
         finish()
@@ -156,6 +161,12 @@ class AuthActivity : AppCompatActivity(), ITalkToUI {
 
     private fun showProgressBar() = progressBar.show()
     private fun hideProgressBar() = progressBar.hide()
+
+    companion object {
+        fun intent(context: Context): Intent {
+            return Intent(context, AuthActivity::class.java)
+        }
+    }
 
 
 }
