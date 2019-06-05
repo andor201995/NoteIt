@@ -15,18 +15,22 @@ import androidx.navigation.Navigation
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.andor.navigate.notepad.MainActivity
 import com.andor.navigate.notepad.R
+import com.andor.navigate.notepad.auth.AuthActivity
+import com.andor.navigate.notepad.auth.UserAuthentication
+import com.andor.navigate.notepad.listing.NotesActivity
 import com.andor.navigate.notepad.listing.adapter.ListItemEvent
 import com.andor.navigate.notepad.listing.adapter.ListingAdapter
 import com.andor.navigate.notepad.listing.dao.NoteModel
 import kotlinx.android.synthetic.main.fragment_note_listing.*
+import java.util.*
+import kotlin.collections.HashSet
 
 
 class NoteListingFragment : Fragment() {
     private var longPressActionMode: androidx.appcompat.view.ActionMode? = null
     private var isLongPressed: Boolean = false
-    private val selectedNotes: HashSet<String> = HashSet()
+    private val selectedNotes: HashSet<NoteModel> = HashSet()
     private lateinit var viewModel: NoteViewModel
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -35,6 +39,7 @@ class NoteListingFragment : Fragment() {
         hideKeyBoard()
         setAddNoteClickEvent()
         setUpListAdapter()
+        viewModel.fetchUserNotes()
     }
 
 
@@ -47,12 +52,12 @@ class NoteListingFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_note_listing, container, false)
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater) {
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
 
         if (isLongPressed) {
             val actionModeCallback = object : androidx.appcompat.view.ActionMode.Callback {
-                override fun onActionItemClicked(mode: androidx.appcompat.view.ActionMode?, item: MenuItem?): Boolean {
+                override fun onActionItemClicked(mode: androidx.appcompat.view.ActionMode?, item: MenuItem): Boolean {
                     return onOptionsItemSelected(item)
                 }
 
@@ -73,13 +78,16 @@ class NoteListingFragment : Fragment() {
                     this@NoteListingFragment.longPressActionMode = null
                     selectedNotes.clear()
                     isLongPressed = false
+                    activity?.invalidateOptionsMenu()
                     listRecyclerView.adapter?.notifyDataSetChanged()
                 }
 
             }
             if (longPressActionMode == null) {
-                (activity!! as MainActivity).startSupportActionMode(actionModeCallback)
+                (activity!! as NotesActivity).startSupportActionMode(actionModeCallback)
             }
+        } else {
+            inflater.inflate(R.menu.menu_main, menu)
         }
     }
 
@@ -94,7 +102,8 @@ class NoteListingFragment : Fragment() {
 
             newNoteImageButtonAccpt.setOnClickListener {
                 val newHeadText = dialog.findViewById<EditText>(R.id.newNoteHeadText).text.toString()
-                viewModel.selectedNote.postValue(NoteModel(newHeadText))
+                val newUUID = UUID.randomUUID().toString()
+                viewModel.selectedNote.postValue(NoteModel(newHeadText, id = newUUID))
                 val action = NoteListingFragmentDirections.actionNoteListingFragmentToUpdateNoteFragment()
                 dialog.cancel()
                 Navigation.findNavController(view!!).navigate(action)
@@ -124,19 +133,19 @@ class NoteListingFragment : Fragment() {
                                         NoteListingFragmentDirections.actionNoteListingFragmentToExpandedNoteFragment()
                                     Navigation.findNavController(view!!).navigate(action)
                                 } else {
-                                    if (selectedNotes.contains(it.noteModel.noteHead)) {
-                                        selectedNotes.remove(it.noteModel.noteHead)
+                                    if (selectedNotes.contains(it.noteModel)) {
+                                        selectedNotes.remove(it.noteModel)
                                         if (selectedNotes.size == 0) {
                                             longPressActionMode?.finish()
                                         }
                                     } else {
-                                        selectedNotes.add(it.noteModel.noteHead)
+                                        selectedNotes.add(it.noteModel)
                                     }
                                 }
                             }
                             is ListItemEvent.LongClickEvent -> {
                                 isLongPressed = true
-                                selectedNotes.add(it.noteModel.noteHead)
+                                selectedNotes.add(it.noteModel)
                                 activity!!.invalidateOptionsMenu()
                             }
                         }
@@ -153,11 +162,23 @@ class NoteListingFragment : Fragment() {
         })
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        if (item!!.itemId == R.id.SelectedItemDelete) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == R.id.SelectedItemDelete) {
             viewModel.delete(HashSet(selectedNotes))
             longPressActionMode!!.finish()
         }
+        if (item.itemId == R.id.action_logout) {
+            logOut()
+        }
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun logOut() {
+        context?.let {
+            val intent = AuthActivity.intent(it)
+            intent.putExtra(UserAuthentication.LOGOUT, true)
+            startActivity(intent)
+            activity!!.finish()
+        }
     }
 }

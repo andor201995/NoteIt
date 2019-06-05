@@ -10,9 +10,8 @@ import android.widget.EditText
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
-import com.andor.navigate.notepad.MainActivity
 import com.andor.navigate.notepad.R
-import com.andor.navigate.notepad.listing.dao.NoteModel
+import com.andor.navigate.notepad.listing.NotesActivity
 import com.andor.navigate.notepad.listing.fragment.NoteViewModel
 import kotlinx.android.synthetic.main.fragment_update_note.*
 import java.util.*
@@ -27,12 +26,12 @@ class UpdateNoteBodyFragment : Fragment() {
         viewModel = ViewModelProviders.of(activity!!).get(NoteViewModel::class.java)
 
         if (UpdateNoteBodyFragmentArgs.fromBundle(arguments!!).editMode) {
-            val bodyText = viewModel.selectedNote.value?.noteBody
+            val bodyText = viewModel.selectedNote.value?.body
             newNoteBodyTxt.setText(bodyText, TextView.BufferType.EDITABLE)
             setSaveAfterDebounceTime(newNoteBodyTxt)
         }
-        val headText = viewModel.selectedNote.value?.noteHead
-        headText?.let { (activity as MainActivity).setActionBarTitle(it) }
+        val headText = viewModel.selectedNote.value?.head
+        headText?.let { (activity as NotesActivity).setActionBarTitle(it) }
     }
 
     private fun setSaveAfterDebounceTime(editText: EditText) {
@@ -61,16 +60,9 @@ class UpdateNoteBodyFragment : Fragment() {
     }
 
     private fun updateNoteModel(s: Editable) {
-        val noteModel = viewModel.selectedNote.value?.noteHead?.let {
-            NoteModel(
-                it,
-                s.toString()
-            )
-        }
-        noteModel?.let {
-            viewModel.insert(it)
-        }
-        viewModel.selectedNote.postValue(noteModel)
+        val newNoteModel = viewModel.selectedNote.value?.copy(body = s.toString())
+        viewModel.insert(newNoteModel!!)
+        viewModel.selectedNote.postValue(newNoteModel)
     }
 
     override fun onCreateView(

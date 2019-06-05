@@ -52,15 +52,14 @@ dependencies {
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
 
     //testing dependency
-    implementation 'com.google.firebase:firebase-auth:16.0.5'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.2.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
     implementation 'androidx.recyclerview:recyclerview:1.0.0'
 
     //Navigation
-    implementation 'android.arch.navigation:navigation-fragment:1.0.0'
-    implementation 'android.arch.navigation:navigation-ui:1.0.0'
+    implementation 'androidx.navigation:navigation-fragment:2.1.0-alpha04'
+    implementation 'androidx.navigation:navigation-ui:2.1.0-alpha04'
 
     // Room components
     implementation "androidx.room:room-runtime:$rootProject.roomVersion"
@@ -83,5 +82,6 @@ dependencies {
     // Fire-Base
     implementation 'com.google.firebase:firebase-core:16.0.9'
     implementation 'com.google.android.gms:play-services-auth:16.0.1'
-
+    implementation 'com.google.firebase:firebase-auth:17.0.0'
+    implementation 'com.google.firebase:firebase-firestore:19.0.1'
 }

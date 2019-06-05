@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#008577</color>
-    <color name="colorPrimaryDark">#00574B</color>
-    <color name="colorAccent">#D81B60</color>
+    <color name="colorPrimary">#108517</color>
+    <color name="colorPrimaryDark">#24752B</color>
+    <color name="colorAccent">#F0AA07</color>
     <color name="selected">#563F51B5</color>
-    <color name="longPressActionMenu">#3F51B5</color>
-    <color name="login">#00BCD4</color>
-    <color name="loading">#5636B4C4</color>
+    <color name="longPressActionMenu">#3FB582</color>
+    <color name="loading">#5644C436</color>
 </resources>
