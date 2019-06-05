@@ -1,15 +1,19 @@
 package com.andor.navigate.notepad.listing.dao
 
-import androidx.room.ColumnInfo
-import androidx.room.Entity
-import androidx.room.PrimaryKey
+import com.google.firebase.firestore.Exclude
 
-
-@Entity(tableName = "note_table")
 data class NoteModel(
-    @PrimaryKey @ColumnInfo(name = "head")
-    val noteHead: String = "Default Head",
+    val head: String = DEFAULT_HEAD,
 
-    @ColumnInfo(name = "body")
-    val noteBody: String = "Default Body"
-)
+    val body: String = DEFAULT_BODY,
+    @Exclude
+    var id: String = DEFAULT_ID
+) {
+    companion object {
+        const val DEFAULT_ID = "Default ID"
+        const val DEFAULT_BODY = "Default Body"
+        const val DEFAULT_HEAD = "Default Head"
+    }
+
+    constructor() : this("", "", "")
+}

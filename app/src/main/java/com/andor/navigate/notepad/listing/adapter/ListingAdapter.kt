@@ -29,8 +29,9 @@ class ListingAdapter(
     }
 
     override fun onBindViewHolder(holder: ListingHolder, position: Int) {
-        holder.headTxtView.text = noteList[position].noteHead
-        holder.bodyTxtView.text = noteList[position].noteBody
+
+        holder.headTxtView.text = noteList[position].head
+        holder.bodyTxtView.text = noteList[position].body
         holder.selectedItemView.inVisible()
 
     }
@@ -45,8 +46,8 @@ class ListingAdapter(
 
     fun updateRecyclerView(newNoteList: List<NoteModel>) {
         val diffResult = DiffUtil.calculateDiff(MyDiffCallback(this.noteList, newNoteList))
-        (this.noteList as ArrayList).clear()
-        this.noteList.addAll(newNoteList)
+        (noteList as ArrayList).clear()
+        noteList.addAll(newNoteList)
         diffResult.dispatchUpdatesTo(this)
     }
 
@@ -80,10 +81,13 @@ class ListingAdapter(
     }
 }
 
-class MyDiffCallback(private val oldNoteList: List<NoteModel>, private val newNoteList: List<NoteModel>) :
+class MyDiffCallback(
+    private val oldNoteList: List<NoteModel>,
+    private val newNoteList: List<NoteModel>
+) :
     DiffUtil.Callback() {
     override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        return oldNoteList[oldItemPosition].noteHead == newNoteList[newItemPosition].noteHead
+        return oldNoteList[oldItemPosition].id == newNoteList[newItemPosition].id
     }
 
     override fun getOldListSize(): Int {
