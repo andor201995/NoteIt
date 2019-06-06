@@ -22,4 +22,5 @@
     <string name="request_id_token">160192871340-gl6j7q6o2u2lc9qkgc0hpirfcivi7sni.apps.googleusercontent.com</string>
     <string name="name">Name</string>
     <string name="logout">logout</string>
+    <string name="list_view_type">List View Type</string>
 </resources>
