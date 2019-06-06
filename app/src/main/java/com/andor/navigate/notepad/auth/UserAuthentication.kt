@@ -63,14 +63,21 @@ class UserAuthentication(private val iTalkToUI: ITalkToUI) : UserAuth {
     }
 
     private fun createUserIfNeeded(user: FirebaseUser) {
-        fireBaseFireStore.collection("Users").document(user.uid).get().addOnCompleteListener {
-            if (it.isSuccessful && !it.result!!.exists()) {
-                val defaultData = hashMapOf("head" to "Hello", "body" to "Welcome to NoteIt...")
-                fireBaseFireStore.collection("Users").document(user.uid).collection("Notes").document("Default")
-                    .set(defaultData)
-            }
-        }
+        val notesRef = fireBaseFireStore
+            .collection("Users")
+            .document(user.uid)
+            .collection("Notes")
 
+        notesRef
+            .get()
+            .addOnCompleteListener {
+                if (it.result == null || it.result!!.documents.size == 0) {
+                    val defaultData = hashMapOf("head" to "Hello", "body" to "Welcome to NoteIt...")
+                    notesRef
+                        .document("Default")
+                        .set(defaultData)
+                }
+            }
     }
 
     override fun signInFireBaseUser(email: String, password: String, activity: Activity) {

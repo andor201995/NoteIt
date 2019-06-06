@@ -11,8 +11,8 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import com.andor.navigate.notepad.R
+import com.andor.navigate.notepad.core.NoteViewModel
 import com.andor.navigate.notepad.listing.NotesActivity
-import com.andor.navigate.notepad.listing.fragment.NoteViewModel
 import kotlinx.android.synthetic.main.fragment_update_note.*
 import java.util.*
 
@@ -25,13 +25,18 @@ class UpdateNoteBodyFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProviders.of(activity!!).get(NoteViewModel::class.java)
 
-        if (UpdateNoteBodyFragmentArgs.fromBundle(arguments!!).editMode) {
-            val bodyText = viewModel.selectedNote.value?.body
-            newNoteBodyTxt.setText(bodyText, TextView.BufferType.EDITABLE)
-            setSaveAfterDebounceTime(newNoteBodyTxt)
+        viewModel.appStateRelay.value?.let { appState ->
+
+            appState.selectedNote?.let {
+                if (UpdateNoteBodyFragmentArgs.fromBundle(arguments!!).editMode) {
+                    val bodyText = it.body
+                    newNoteBodyTxt.setText(bodyText, TextView.BufferType.EDITABLE)
+                    setSaveAfterDebounceTime(newNoteBodyTxt)
+                }
+                val headText = it.head
+                (activity as NotesActivity).setActionBarTitle(headText)
+            }
         }
-        val headText = viewModel.selectedNote.value?.head
-        headText?.let { (activity as NotesActivity).setActionBarTitle(it) }
     }
 
     private fun setSaveAfterDebounceTime(editText: EditText) {
@@ -60,9 +65,9 @@ class UpdateNoteBodyFragment : Fragment() {
     }
 
     private fun updateNoteModel(s: Editable) {
-        val newNoteModel = viewModel.selectedNote.value?.copy(body = s.toString())
-        viewModel.insert(newNoteModel!!)
-        viewModel.selectedNote.postValue(newNoteModel)
+        val value = viewModel.appStateRelay.value!!
+        val newNoteModel = value.selectedNote!!.copy(body = s.toString())
+        viewModel.insert(newNoteModel)
     }
 
     override fun onCreateView(

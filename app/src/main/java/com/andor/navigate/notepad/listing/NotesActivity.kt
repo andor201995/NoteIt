@@ -10,7 +10,8 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import com.andor.navigate.notepad.R
-import com.andor.navigate.notepad.listing.fragment.NoteViewModel
+import com.andor.navigate.notepad.core.NoteViewModel
+import com.andor.navigate.notepad.core.NoteViewModelFactory
 import kotlinx.android.synthetic.main.activity_listing.*
 import kotlinx.android.synthetic.main.content_main.*
 
@@ -37,8 +38,10 @@ class NotesActivity : AppCompatActivity() {
             NavHostFragment.findNavController(nav_host),
             appBarConfiguration
         )
-        viewModel = ViewModelProviders.of(this).get(NoteViewModel::class.java)
-        viewModel.uid = intent?.getStringExtra("uid")!!
+
+        viewModel =
+            ViewModelProviders.of(this, NoteViewModelFactory(application!!, uid = intent!!.getStringExtra("uid")!!))
+                .get(NoteViewModel::class.java)
     }
 
     override fun onSupportNavigateUp(): Boolean = Navigation.findNavController(

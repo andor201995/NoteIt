@@ -4,12 +4,12 @@ import android.util.Log
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
 import com.andor.navigate.notepad.auth.UserAuthentication.Companion.TAG
+import com.andor.navigate.notepad.core.AppState
 import com.google.firebase.firestore.FirebaseFirestore
 
 
-class NoteRepoImpl {
+class NoteRepoImpl(private val appStateRelay: MutableLiveData<AppState>) {
     private val db = FirebaseFirestore.getInstance()
-    val allNotes: MutableLiveData<List<NoteModel>> = MutableLiveData()
 
     @WorkerThread
     fun insert(
@@ -19,11 +19,15 @@ class NoteRepoImpl {
         if (noteModel.id == NoteModel.DEFAULT_ID) {
             db.collection("Users").document(uid).collection("Notes")
                 .document()
-                .set(noteModel)
+                .set(noteModel).addOnSuccessListener {
+                    appStateRelay.postValue(appStateRelay.value!!.copy(selectedNote = noteModel))
+                }
         } else {
             db.collection("Users").document(uid).collection("Notes")
                 .document(noteModel.id)
-                .set(noteModel)
+                .set(noteModel).addOnSuccessListener {
+                    appStateRelay.postValue(appStateRelay.value!!.copy(selectedNote = noteModel))
+                }
         }
 
     }
@@ -50,7 +54,7 @@ class NoteRepoImpl {
                         noteObject.id = doc.id
                         list.add(noteObject)
                     }
-                    allNotes.postValue(list)
+                    appStateRelay.postValue(appStateRelay.value!!.copy(listOfAllNotes = list))
                 } else {
                     Log.d(TAG, "Current data: null")
                 }
