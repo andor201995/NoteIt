@@ -1,13 +1,10 @@
 package com.andor.navigate.notepad.listing.fragment
 
 
-import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
 import android.view.*
 import android.view.inputmethod.InputMethodManager
-import android.widget.EditText
-import android.widget.ImageButton
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -17,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.andor.navigate.notepad.R
+import com.andor.navigate.notepad.core.AppState
 import com.andor.navigate.notepad.core.ListingType
 import com.andor.navigate.notepad.core.NoteViewModel
 import com.andor.navigate.notepad.listing.NotesActivity
@@ -24,11 +22,10 @@ import com.andor.navigate.notepad.listing.adapter.ListItemEvent
 import com.andor.navigate.notepad.listing.adapter.ListingAdapter
 import com.andor.navigate.notepad.listing.dao.NoteModel
 import kotlinx.android.synthetic.main.fragment_note_listing.*
-import java.util.*
-import kotlin.collections.HashSet
 
 
 class NoteListingFragment : Fragment() {
+    private val bottomSheetMenuFragment = BottomSheetMenuFragment()
     private var longPressActionMode: androidx.appcompat.view.ActionMode? = null
     private var isLongPressed: Boolean = false
     private val selectedNotes: HashSet<NoteModel> = HashSet()
@@ -95,32 +92,15 @@ class NoteListingFragment : Fragment() {
 
     private fun setAddNoteClickEvent() {
         addNoteButton.setOnClickListener {
-            val dialog = Dialog(context!!)
-            dialog.setContentView(R.layout.new_note_dialog)
-            dialog.setTitle(R.string.new_note_hint)
+            setAddNoteBottomSheet()
+        }
+    }
 
-            val newNoteImageButtonAccpt = dialog.findViewById<ImageButton>(R.id.newNoteButtonAccept)
-            val newNoteImageButtonReject = dialog.findViewById<ImageButton>(R.id.newNoteButtonCancel)
-
-            newNoteImageButtonAccpt.setOnClickListener {
-                val newHeadText = dialog.findViewById<EditText>(R.id.newNoteHeadText).text.toString()
-                val newUUID = UUID.randomUUID().toString()
-                viewModel.appStateRelay.postValue(
-                    viewModel.appStateRelay.value!!.copy(
-                        selectedNote = NoteModel(
-                            newHeadText,
-                            id = newUUID
-                        )
-                    )
-                )
-                val action = NoteListingFragmentDirections.actionNoteListingFragmentToUpdateNoteFragment()
-                dialog.cancel()
-                Navigation.findNavController(view!!).navigate(action)
-            }
-            newNoteImageButtonReject.setOnClickListener {
-                dialog.cancel()
-            }
-            dialog.show()
+    private fun setAddNoteBottomSheet() {
+        if (!bottomSheetMenuFragment.isAdded) {
+            bottomSheetMenuFragment.show(activity!!.supportFragmentManager, "Bottom_Sheet")
+        } else {
+            bottomSheetMenuFragment.dismiss()
         }
     }
 
@@ -135,51 +115,63 @@ class NoteListingFragment : Fragment() {
                 val noteList = notNullAppState.listOfAllNotes
                 if (listRecyclerView.adapter == null) {
                     val listingAdapter = ListingAdapter(context!!, noteList) {
-                        when (it) {
-                            is ListItemEvent.SingleClickEvent -> {
-                                if (!isLongPressed) {
-                                    viewModel.appStateRelay.postValue(viewModel.appStateRelay.value!!.copy(selectedNote = it.noteModel))
-                                    val action =
-                                        NoteListingFragmentDirections.actionNoteListingFragmentToExpandedNoteFragment()
-                                    Navigation.findNavController(view!!).navigate(action)
-                                } else {
-                                    if (selectedNotes.contains(it.noteModel)) {
-                                        selectedNotes.remove(it.noteModel)
-                                        if (selectedNotes.size == 0) {
-                                            longPressActionMode?.finish()
-                                        }
-                                    } else {
-                                        selectedNotes.add(it.noteModel)
-                                    }
-                                }
-                            }
-                            is ListItemEvent.LongClickEvent -> {
-                                isLongPressed = true
-                                selectedNotes.add(it.noteModel)
-                                activity!!.invalidateOptionsMenu()
-                            }
-                        }
+                        setRecyclerViewEventListener(it)
                     }
-                    listRecyclerView.layoutManager = when (appState.listingType) {
-                        is ListingType.Linear -> {
-                            val linearLayoutManager = LinearLayoutManager(context)
-                            linearLayoutManager.orientation = RecyclerView.VERTICAL
-                            linearLayoutManager
-                        }
-                        ListingType.Grid -> {
-                            val gridLayoutManager = GridLayoutManager(context, gridSize)
-                            gridLayoutManager
-                        }
-                        ListingType.Stagered -> {
-                            StaggeredGridLayoutManager(gridSize, RecyclerView.VERTICAL)
-                        }
-                    }
-                    listRecyclerView.adapter = listingAdapter
+
+                    setRecyclerView(appState, listingAdapter)
                 } else {
                     (listRecyclerView.adapter as ListingAdapter).updateRecyclerView(noteList)
                 }
             }
         })
+    }
+
+    private fun setRecyclerViewEventListener(it: ListItemEvent) {
+        when (it) {
+            is ListItemEvent.SingleClickEvent -> {
+                if (!isLongPressed) {
+                    viewModel.appStateRelay.postValue(viewModel.appStateRelay.value!!.copy(selectedNote = it.noteModel))
+                    val action =
+                        NoteListingFragmentDirections.actionNoteListingFragmentToExpandedNoteFragment()
+                    Navigation.findNavController(view!!).navigate(action)
+                } else {
+                    if (selectedNotes.contains(it.noteModel)) {
+                        selectedNotes.remove(it.noteModel)
+                        if (selectedNotes.size == 0) {
+                            longPressActionMode?.finish()
+                        }
+                    } else {
+                        selectedNotes.add(it.noteModel)
+                    }
+                }
+            }
+            is ListItemEvent.LongClickEvent -> {
+                isLongPressed = true
+                selectedNotes.add(it.noteModel)
+                activity!!.invalidateOptionsMenu()
+            }
+        }
+    }
+
+    private fun setRecyclerView(
+        appState: AppState,
+        listingAdapter: ListingAdapter
+    ) {
+        listRecyclerView.layoutManager = when (appState.listingType) {
+            is ListingType.Linear -> {
+                val linearLayoutManager = LinearLayoutManager(context)
+                linearLayoutManager.orientation = RecyclerView.VERTICAL
+                linearLayoutManager
+            }
+            ListingType.Grid -> {
+                val gridLayoutManager = GridLayoutManager(context, gridSize)
+                gridLayoutManager
+            }
+            ListingType.Stagered -> {
+                StaggeredGridLayoutManager(gridSize, RecyclerView.VERTICAL)
+            }
+        }
+        listRecyclerView.adapter = listingAdapter
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
