@@ -12,10 +12,12 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.Navigation
-import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.andor.navigate.notepad.R
+import com.andor.navigate.notepad.core.ListingType
 import com.andor.navigate.notepad.core.NoteViewModel
 import com.andor.navigate.notepad.listing.NotesActivity
 import com.andor.navigate.notepad.listing.adapter.ListItemEvent
@@ -31,6 +33,7 @@ class NoteListingFragment : Fragment() {
     private var isLongPressed: Boolean = false
     private val selectedNotes: HashSet<NoteModel> = HashSet()
     private lateinit var viewModel: NoteViewModel
+    private val gridSize = 2
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -157,10 +160,20 @@ class NoteListingFragment : Fragment() {
                             }
                         }
                     }
-                    listRecyclerView.addItemDecoration(DividerItemDecoration(context, LinearLayoutManager.VERTICAL))
-                    val linearLayoutManager = LinearLayoutManager(context)
-                    linearLayoutManager.orientation = RecyclerView.VERTICAL
-                    listRecyclerView.layoutManager = linearLayoutManager
+                    listRecyclerView.layoutManager = when (appState.listingType) {
+                        is ListingType.Linear -> {
+                            val linearLayoutManager = LinearLayoutManager(context)
+                            linearLayoutManager.orientation = RecyclerView.VERTICAL
+                            linearLayoutManager
+                        }
+                        ListingType.Grid -> {
+                            val gridLayoutManager = GridLayoutManager(context, gridSize)
+                            gridLayoutManager
+                        }
+                        ListingType.Stagered -> {
+                            StaggeredGridLayoutManager(gridSize, RecyclerView.VERTICAL)
+                        }
+                    }
                     listRecyclerView.adapter = listingAdapter
                 } else {
                     (listRecyclerView.adapter as ListingAdapter).updateRecyclerView(noteList)
