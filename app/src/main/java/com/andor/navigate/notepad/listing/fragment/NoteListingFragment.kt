@@ -16,8 +16,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.andor.navigate.notepad.R
-import com.andor.navigate.notepad.auth.AuthActivity
-import com.andor.navigate.notepad.auth.UserAuthentication
+import com.andor.navigate.notepad.core.NoteViewModel
 import com.andor.navigate.notepad.listing.NotesActivity
 import com.andor.navigate.notepad.listing.adapter.ListItemEvent
 import com.andor.navigate.notepad.listing.adapter.ListingAdapter
@@ -103,7 +102,14 @@ class NoteListingFragment : Fragment() {
             newNoteImageButtonAccpt.setOnClickListener {
                 val newHeadText = dialog.findViewById<EditText>(R.id.newNoteHeadText).text.toString()
                 val newUUID = UUID.randomUUID().toString()
-                viewModel.selectedNote.postValue(NoteModel(newHeadText, id = newUUID))
+                viewModel.appStateRelay.postValue(
+                    viewModel.appStateRelay.value!!.copy(
+                        selectedNote = NoteModel(
+                            newHeadText,
+                            id = newUUID
+                        )
+                    )
+                )
                 val action = NoteListingFragmentDirections.actionNoteListingFragmentToUpdateNoteFragment()
                 dialog.cancel()
                 Navigation.findNavController(view!!).navigate(action)
@@ -121,14 +127,15 @@ class NoteListingFragment : Fragment() {
     }
 
     private fun setUpListAdapter() {
-        viewModel.allNotes.observe(this, Observer { notes ->
-            notes.let { noteList ->
+        viewModel.appStateRelay.observe(this, Observer { appState ->
+            appState?.let { notNullAppState ->
+                val noteList = notNullAppState.listOfAllNotes
                 if (listRecyclerView.adapter == null) {
                     val listingAdapter = ListingAdapter(context!!, noteList) {
                         when (it) {
                             is ListItemEvent.SingleClickEvent -> {
                                 if (!isLongPressed) {
-                                    viewModel.selectedNote.postValue(it.noteModel)
+                                    viewModel.appStateRelay.postValue(viewModel.appStateRelay.value!!.copy(selectedNote = it.noteModel))
                                     val action =
                                         NoteListingFragmentDirections.actionNoteListingFragmentToExpandedNoteFragment()
                                     Navigation.findNavController(view!!).navigate(action)
@@ -167,18 +174,9 @@ class NoteListingFragment : Fragment() {
             viewModel.delete(HashSet(selectedNotes))
             longPressActionMode!!.finish()
         }
-        if (item.itemId == R.id.action_logout) {
-            logOut()
+        if (item.itemId == R.id.action_setting) {
+            Navigation.findNavController(view!!).navigate(R.id.action_noteListingFragment_to_settingFragment)
         }
         return super.onOptionsItemSelected(item)
-    }
-
-    private fun logOut() {
-        context?.let {
-            val intent = AuthActivity.intent(it)
-            intent.putExtra(UserAuthentication.LOGOUT, true)
-            startActivity(intent)
-            activity!!.finish()
-        }
     }
 }

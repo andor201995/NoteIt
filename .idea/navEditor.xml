@@ -45,12 +45,29 @@
                                 <LayoutPositions />
                               </value>
                             </entry>
+                            <entry key="action_noteListingFragment_to_settingFragment">
+                              <value>
+                                <LayoutPositions />
+                              </value>
+                            </entry>
                             <entry key="action_noteListingFragment_to_updateNoteFragment">
                               <value>
                                 <LayoutPositions />
                               </value>
                             </entry>
                           </map>
+                        </option>
+                      </LayoutPositions>
+                    </value>
+                  </entry>
+                  <entry key="settingFragment">
+                    <value>
+                      <LayoutPositions>
+                        <option name="myPosition">
+                          <Point>
+                            <option name="x" value="235" />
+                            <option name="y" value="-354" />
+                          </Point>
                         </option>
                       </LayoutPositions>
                     </value>

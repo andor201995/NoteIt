@@ -9,8 +9,8 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.Navigation
 import com.andor.navigate.notepad.R
+import com.andor.navigate.notepad.core.NoteViewModel
 import com.andor.navigate.notepad.listing.NotesActivity
-import com.andor.navigate.notepad.listing.fragment.NoteViewModel
 import kotlinx.android.synthetic.main.fragment_expanded_note.*
 
 
@@ -23,9 +23,11 @@ class ExpandedNoteFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProviders.of(activity!!).get(NoteViewModel::class.java)
         expandedNoteTxt.movementMethod = ScrollingMovementMethod()
-        viewModel.selectedNote.observe(this, Observer {
-            expandedNoteTxt.text = it.body
-            (activity as NotesActivity).setActionBarTitle(it.head)
+        viewModel.appStateRelay.observe(this, Observer { appState ->
+            appState.selectedNote?.let {
+                expandedNoteTxt.text = it.body
+                (activity as NotesActivity).setActionBarTitle(it.head)
+            }
         })
     }
 
