@@ -82,11 +82,11 @@ class AuthActivity : AppCompatActivity(), ITalkToUI {
 
             createAccountBtn.setOnClickListener(object : DebouncedOnClickListener(1000) {
                 override fun onDebouncedClick(v: View) {
+                    dialog.cancel()
                     registerUser(
                         inputEmail.text.toString().trim(),
                         inputPass.text.toString().trim(),
-                        inputName.text.toString().trim(),
-                        dialog
+                        inputName.text.toString().trim()
                     )
                 }
 
@@ -110,10 +110,10 @@ class AuthActivity : AppCompatActivity(), ITalkToUI {
         return false
     }
 
-    private fun registerUser(email: String, password: String, name: String, dialog: Dialog) {
+    private fun registerUser(email: String, password: String, name: String) {
         if (isCredentialEmpty(email, password)) return
         showProgressBar()
-        mUserAuth.signUpFireBaseUser(email, password, name, this, dialog)
+        mUserAuth.signUpFireBaseUser(email, password, name, this)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

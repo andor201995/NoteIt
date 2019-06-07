@@ -11,8 +11,7 @@ interface UserAuth {
     fun signUpFireBaseUser(
         email: String,
         password: String, displayName: String,
-        activity: Activity,
-        dialog: Dialog
+        activity: Activity
     )
     fun signInGoogleUser(credential: AuthCredential, activity: Activity)
     fun logout()
