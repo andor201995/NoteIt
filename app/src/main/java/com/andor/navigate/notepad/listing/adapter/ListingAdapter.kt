@@ -24,7 +24,7 @@ class ListingAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ListingHolder {
         val itemView =
-            LayoutInflater.from(context).inflate(R.layout.listing_item, parent, false)
+            LayoutInflater.from(context).inflate(R.layout.item_listing, parent, false)
         return ListingHolder(itemView)
     }
 
@@ -99,7 +99,7 @@ class MyDiffCallback(
     }
 
     override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        return oldNoteList[oldItemPosition] == newNoteList[newItemPosition];
+        return oldNoteList[oldItemPosition] == newNoteList[newItemPosition]
     }
 
 }

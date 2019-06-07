@@ -6,4 +6,5 @@
     <color name="selected">#563F51B5</color>
     <color name="longPressActionMenu">#3FB582</color>
     <color name="loading">#5644C436</color>
+    <color name="white">#FFFFFF</color>
 </resources>

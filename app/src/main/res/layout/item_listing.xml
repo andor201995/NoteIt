@@ -2,7 +2,12 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="100dp"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/list_spacing_horizontal"
+    android:layout_marginTop="@dimen/list_spacing_vertical"
+    android:layout_marginEnd="@dimen/list_spacing_horizontal"
+    android:layout_marginBottom="@dimen/list_spacing_vertical"
+    android:background="@drawable/note_background"
     android:orientation="vertical">
 
     <TextView
@@ -10,40 +15,44 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
         android:ellipsize="end"
         android:gravity="center_horizontal"
         android:maxLines="1"
         android:text="@string/headText"
         android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
 
     <TextView
         android:id="@+id/noteBodyTxtView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="8dp"
         android:ellipsize="end"
         android:maxHeight="50dp"
-        android:maxLines="2"
+        android:maxLines="5"
         android:text="@string/bodyText"
         android:textStyle="italic"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/noteHeadTxtView" />
+        app:layout_constraintTop_toBottomOf="@+id/noteHeadTxtView"
+        app:layout_constraintVertical_bias="0.0" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/selectedItemView"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="@color/selected"
+        android:background="@drawable/border"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

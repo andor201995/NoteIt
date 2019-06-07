@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph_bottom_menu"
+    app:startDestination="@id/addNewNoteFragment">
+
+    <fragment
+        android:id="@+id/addNewNoteFragment"
+        android:name="com.andor.navigate.notepad.listing.fragment.AddNewNoteFragment"
+        android:label="fragment_add_new_note"
+        tools:layout="@layout/fragment_add_new_note" />
+</navigation>
