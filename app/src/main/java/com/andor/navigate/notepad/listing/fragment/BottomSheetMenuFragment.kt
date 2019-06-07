@@ -6,13 +6,23 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.Navigation
 import com.andor.navigate.demonavigation.fragment.BottomSheetNavFragment
 import com.andor.navigate.notepad.R
+import com.andor.navigate.notepad.core.BottomMenuEvent
+import com.andor.navigate.notepad.core.NoteViewModel
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 open class BottomSheetMenuFragment : BottomSheetDialogFragment() {
+
+    private lateinit var viewModel: NoteViewModel
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        viewModel = ViewModelProviders.of(activity!!).get(NoteViewModel::class.java)
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_bottom_sheet_menu, container, false)
@@ -35,7 +45,13 @@ open class BottomSheetMenuFragment : BottomSheetDialogFragment() {
                     dismiss()
                 }
             }
+
+            override fun dismiss() {
+                super.dismiss()
+                viewModel.appStateRelay.postValue(viewModel.appStateRelay.value?.copy(bottomMenuEvent = BottomMenuEvent.Close))
+            }
         }
     }
+
 
 }

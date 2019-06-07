@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/holder_container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginStart="@dimen/list_spacing_horizontal"
     android:layout_marginTop="@dimen/list_spacing_vertical"
     android:layout_marginEnd="@dimen/list_spacing_horizontal"
     android:layout_marginBottom="@dimen/list_spacing_vertical"
-    android:background="@drawable/note_background"
     android:orientation="vertical">
 
     <TextView
@@ -52,7 +52,7 @@
         android:id="@+id/selectedItemView"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="@drawable/border"
+        android:background="@drawable/backgound_button_select"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

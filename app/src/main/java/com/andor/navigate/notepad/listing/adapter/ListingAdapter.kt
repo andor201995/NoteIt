@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.andor.navigate.notepad.R
@@ -18,6 +19,10 @@ class ListingAdapter(
 
 ) : RecyclerView.Adapter<ListingAdapter.ListingHolder>() {
 
+    init {
+        setHasStableIds(true)
+    }
+
     override fun getItemCount(): Int {
         return noteList.size
     }
@@ -29,15 +34,39 @@ class ListingAdapter(
     }
 
     override fun onBindViewHolder(holder: ListingHolder, position: Int) {
+        val currentNoteModal = noteList[position]
+        holder.headTxtView.text = currentNoteModal.head
+        holder.bodyTxtView.text = currentNoteModal.body
+        holder.container.background = when {
+            currentNoteModal.bg == NoteModel.NOTE_BG1 -> ContextCompat.getDrawable(
+                context,
+                R.drawable.background_note_1
+            )
+            currentNoteModal.bg == NoteModel.NOTE_BG2 -> ContextCompat.getDrawable(
+                context,
+                R.drawable.background_note_2
+            )
+            currentNoteModal.bg == NoteModel.NOTE_BG3 -> ContextCompat.getDrawable(
+                context,
+                R.drawable.background_note_3
+            )
+            currentNoteModal.bg == NoteModel.NOTE_BG4 -> ContextCompat.getDrawable(
+                context,
+                R.drawable.background_note_4
+            )
+            currentNoteModal.bg == NoteModel.NOTE_BG5 -> ContextCompat.getDrawable(
+                context,
+                R.drawable.background_note_5
+            )
 
-        holder.headTxtView.text = noteList[position].head
-        holder.bodyTxtView.text = noteList[position].body
+            else -> ContextCompat.getDrawable(context, R.drawable.background_note_0)
+        }
         holder.selectedItemView.inVisible()
 
     }
 
     override fun getItemId(position: Int): Long {
-        return position.toLong()
+        return super.getItemId(position)
     }
 
     override fun getItemViewType(position: Int): Int {
@@ -56,6 +85,7 @@ class ListingAdapter(
         val headTxtView: TextView = view.findViewById(R.id.noteHeadTxtView)
         val bodyTxtView: TextView = view.findViewById(R.id.noteBodyTxtView)
         val selectedItemView: View = view.findViewById(R.id.selectedItemView)
+        val container: View = view.findViewById(R.id.holder_container)
 
         init {
             view.setOnClickListener(this)

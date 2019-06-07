@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.andor.navigate.notepad.R
 import com.andor.navigate.notepad.core.AppState
+import com.andor.navigate.notepad.core.BottomMenuEvent
 import com.andor.navigate.notepad.core.ListingType
 import com.andor.navigate.notepad.core.NoteViewModel
 import com.andor.navigate.notepad.listing.NotesActivity
@@ -25,6 +26,7 @@ import kotlinx.android.synthetic.main.fragment_note_listing.*
 
 
 class NoteListingFragment : Fragment() {
+    private lateinit var oldAppState: AppState
     private val bottomSheetMenuFragment = BottomSheetMenuFragment()
     private var longPressActionMode: androidx.appcompat.view.ActionMode? = null
     private var isLongPressed: Boolean = false
@@ -89,9 +91,9 @@ class NoteListingFragment : Fragment() {
         }
     }
 
-    private fun setAddNoteBottomSheet() {
+    private fun sendAddNoteBottomSheetCommand() {
         if (!bottomSheetMenuFragment.isAdded) {
-            bottomSheetMenuFragment.show(activity!!.supportFragmentManager, "Bottom_Sheet")
+            viewModel.appStateRelay.postValue(viewModel.appStateRelay.value?.copy(bottomMenuEvent = BottomMenuEvent.Open))
         } else {
             bottomSheetMenuFragment.dismiss()
         }
@@ -106,21 +108,45 @@ class NoteListingFragment : Fragment() {
         viewModel.appStateRelay.observe(this, Observer { appState ->
             appState?.let { notNullAppState ->
                 updateRecyclerView(notNullAppState)
+                handleBottomSheetEvent(notNullAppState)
 
+                oldAppState = appState
             }
         })
     }
 
+    private fun handleBottomSheetEvent(appState: AppState) {
+        if (::oldAppState.isInitialized && oldAppState.bottomMenuEvent != appState.bottomMenuEvent) {
+            when (appState.bottomMenuEvent) {
+                is BottomMenuEvent.AddNote -> {
+                    bottomSheetMenuFragment.dismiss()
+                    Navigation.findNavController(view!!).navigate(R.id.action_noteListingFragment_to_updateNoteFragment)
+                }
+                is BottomMenuEvent.Close -> bottomSheetMenuFragment.dismiss()
+                is BottomMenuEvent.Open -> {
+                    if (!bottomSheetMenuFragment.isAdded) {
+                        bottomSheetMenuFragment.show(
+                            activity!!.supportFragmentManager,
+                            "Bottom_Sheet"
+                        )
+                    } else {
+                        bottomSheetMenuFragment.dismiss()
+                    }
+                }
+            }
+        }
+    }
+
     private fun updateRecyclerView(
-        notNullAppState: AppState
+        appState: AppState
     ) {
-        val noteList = notNullAppState.listOfAllNotes
+        val noteList = appState.listOfAllNotes
         if (listRecyclerView.adapter == null) {
             val listingAdapter = ListingAdapter(context!!, noteList) {
                 setRecyclerViewEventListener(it)
             }
 
-            setRecyclerView(notNullAppState, listingAdapter)
+            setRecyclerView(appState, listingAdapter)
         } else {
             (listRecyclerView.adapter as ListingAdapter).updateRecyclerView(noteList)
         }
@@ -167,7 +193,7 @@ class NoteListingFragment : Fragment() {
                 val gridLayoutManager = GridLayoutManager(context, gridSize)
                 gridLayoutManager
             }
-            ListingType.Stagered -> {
+            ListingType.Staggered -> {
                 StaggeredGridLayoutManager(gridSize, RecyclerView.VERTICAL)
             }
         }
@@ -177,13 +203,13 @@ class NoteListingFragment : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.SelectedItemDelete) {
             viewModel.delete(HashSet(selectedNotes))
-            longPressActionMode!!.finish()
+            longPressActionMode?.finish()
         }
         if (item.itemId == R.id.action_setting) {
             Navigation.findNavController(view!!).navigate(R.id.action_noteListingFragment_to_settingFragment)
         }
         if (item.itemId == R.id.action_add) {
-            setAddNoteBottomSheet()
+            sendAddNoteBottomSheetCommand()
         }
         return super.onOptionsItemSelected(item)
     }

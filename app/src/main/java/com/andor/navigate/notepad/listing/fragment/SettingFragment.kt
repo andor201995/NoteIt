@@ -36,15 +36,15 @@ class SettingFragment : Fragment() {
             when (it.listingType) {
                 is ListingType.Linear -> {
                     setting_view_type_linear.background =
-                        ContextCompat.getDrawable(context!!, R.drawable.border)
+                        ContextCompat.getDrawable(context!!, R.drawable.backgound_button_select)
                 }
                 is ListingType.Grid -> {
                     setting_view_type_grid.background =
-                        ContextCompat.getDrawable(context!!, R.drawable.border)
+                        ContextCompat.getDrawable(context!!, R.drawable.backgound_button_select)
                 }
-                is ListingType.Stagered -> {
+                is ListingType.Staggered -> {
                     setting_view_type_staggered.background =
-                        ContextCompat.getDrawable(context!!, R.drawable.border)
+                        ContextCompat.getDrawable(context!!, R.drawable.backgound_button_select)
                 }
             }
         }
@@ -56,17 +56,17 @@ class SettingFragment : Fragment() {
         setting_view_type_linear.setOnClickListener {
             viewModel.appStateRelay.postValue(viewModel.appStateRelay.value!!.copy(listingType = ListingType.Linear))
             clearButtonBackGround()
-            it.background = ContextCompat.getDrawable(context!!, R.drawable.border)
+            it.background = ContextCompat.getDrawable(context!!, R.drawable.backgound_button_select)
         }
         setting_view_type_grid.setOnClickListener {
             viewModel.appStateRelay.postValue(viewModel.appStateRelay.value!!.copy(listingType = ListingType.Grid))
             clearButtonBackGround()
-            it.background = ContextCompat.getDrawable(context!!, R.drawable.border)
+            it.background = ContextCompat.getDrawable(context!!, R.drawable.backgound_button_select)
         }
         setting_view_type_staggered.setOnClickListener {
-            viewModel.appStateRelay.postValue(viewModel.appStateRelay.value!!.copy(listingType = ListingType.Stagered))
+            viewModel.appStateRelay.postValue(viewModel.appStateRelay.value!!.copy(listingType = ListingType.Staggered))
             clearButtonBackGround()
-            it.background = ContextCompat.getDrawable(context!!, R.drawable.border)
+            it.background = ContextCompat.getDrawable(context!!, R.drawable.backgound_button_select)
         }
     }
 
