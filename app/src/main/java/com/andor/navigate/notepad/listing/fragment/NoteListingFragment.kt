@@ -36,8 +36,7 @@ class NoteListingFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProviders.of(activity!!).get(NoteViewModel::class.java)
         hideKeyBoard()
-        setAddNoteClickEvent()
-        setUpListAdapter()
+        handleAppStateChange()
         viewModel.fetchUserNotes()
     }
 
@@ -90,12 +89,6 @@ class NoteListingFragment : Fragment() {
         }
     }
 
-    private fun setAddNoteClickEvent() {
-        addNoteButton.setOnClickListener {
-            setAddNoteBottomSheet()
-        }
-    }
-
     private fun setAddNoteBottomSheet() {
         if (!bottomSheetMenuFragment.isAdded) {
             bottomSheetMenuFragment.show(activity!!.supportFragmentManager, "Bottom_Sheet")
@@ -109,21 +102,28 @@ class NoteListingFragment : Fragment() {
         imm.hideSoftInputFromWindow(view!!.windowToken, 0)
     }
 
-    private fun setUpListAdapter() {
+    private fun handleAppStateChange() {
         viewModel.appStateRelay.observe(this, Observer { appState ->
             appState?.let { notNullAppState ->
-                val noteList = notNullAppState.listOfAllNotes
-                if (listRecyclerView.adapter == null) {
-                    val listingAdapter = ListingAdapter(context!!, noteList) {
-                        setRecyclerViewEventListener(it)
-                    }
+                updateRecyclerView(notNullAppState)
 
-                    setRecyclerView(appState, listingAdapter)
-                } else {
-                    (listRecyclerView.adapter as ListingAdapter).updateRecyclerView(noteList)
-                }
             }
         })
+    }
+
+    private fun updateRecyclerView(
+        notNullAppState: AppState
+    ) {
+        val noteList = notNullAppState.listOfAllNotes
+        if (listRecyclerView.adapter == null) {
+            val listingAdapter = ListingAdapter(context!!, noteList) {
+                setRecyclerViewEventListener(it)
+            }
+
+            setRecyclerView(notNullAppState, listingAdapter)
+        } else {
+            (listRecyclerView.adapter as ListingAdapter).updateRecyclerView(noteList)
+        }
     }
 
     private fun setRecyclerViewEventListener(it: ListItemEvent) {
@@ -181,6 +181,9 @@ class NoteListingFragment : Fragment() {
         }
         if (item.itemId == R.id.action_setting) {
             Navigation.findNavController(view!!).navigate(R.id.action_noteListingFragment_to_settingFragment)
+        }
+        if (item.itemId == R.id.action_add) {
+            setAddNoteBottomSheet()
         }
         return super.onOptionsItemSelected(item)
     }

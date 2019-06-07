@@ -23,4 +23,5 @@
     <string name="name">Name</string>
     <string name="logout">logout</string>
     <string name="list_view_type">List View Type</string>
+    <string name="add_note">Add Note</string>
 </resources>

@@ -1,9 +1,13 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-
+    <item
+        android:id="@+id/action_add"
+        android:icon="@drawable/ic_baseline_note_add_24px"
+        android:title="@string/add_note"
+        app:showAsAction="always" />
     <item
         android:id="@+id/action_setting"
         android:icon="@drawable/ic_icons_settings"
-        android:title="@string/logout"
-        app:showAsAction="always" />
+        android:title="@string/action_settings"
+        app:showAsAction="ifRoom" />
 </menu>
