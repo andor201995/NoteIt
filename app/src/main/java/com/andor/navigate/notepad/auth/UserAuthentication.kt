@@ -1,7 +1,6 @@
 package com.andor.navigate.notepad.auth
 
 import android.app.Activity
-import android.app.Dialog
 import android.content.Context
 import android.util.Log
 import com.google.firebase.auth.AuthCredential
@@ -39,8 +38,7 @@ class UserAuthentication(private val iTalkToUI: ITalkToUI) : UserAuth {
     override fun signUpFireBaseUser(
         email: String,
         password: String, displayName: String,
-        activity: Activity,
-        dialog: Dialog
+        activity: Activity
     ) {
         fireBaseAuth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener(activity) { task ->
@@ -51,7 +49,6 @@ class UserAuthentication(private val iTalkToUI: ITalkToUI) : UserAuth {
                     val profileBuilder = UserProfileChangeRequest.Builder()
                     profileBuilder.setDisplayName(displayName)
                     user!!.updateProfile(profileBuilder.build())
-                    dialog.cancel()
                     createUserIfNeeded(user)
                     iTalkToUI.signingInSuccess(user)
                 } else {

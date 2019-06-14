@@ -15,7 +15,7 @@ android {
     compileSdkVersion 28
     defaultConfig {
         applicationId "com.andor.navigate.notepad"
-        minSdkVersion 21
+        minSdkVersion 24
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
@@ -52,7 +52,7 @@ dependencies {
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
 
     //testing dependency
-    implementation 'com.google.firebase:firebase-auth:16.0.5'
+    implementation 'com.google.firebase:firebase-auth:17.0.0'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.2.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'

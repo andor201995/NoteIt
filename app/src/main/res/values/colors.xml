@@ -7,4 +7,5 @@
     <color name="longPressActionMenu">#3FB582</color>
     <color name="loading">#5644C436</color>
     <color name="white">#FFFFFF</color>
+    <color name="transparent">#00FFFFFF</color>
 </resources>
