@@ -5,10 +5,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.andor.navigate.notepad.R
+import com.andor.navigate.notepad.core.Utils
 import com.andor.navigate.notepad.listing.dao.NoteModel
 
 
@@ -37,30 +37,7 @@ class ListingAdapter(
         val currentNoteModal = noteList[position]
         holder.headTxtView.text = currentNoteModal.head
         holder.bodyTxtView.text = currentNoteModal.body
-        holder.container.background = when {
-            currentNoteModal.bg == NoteModel.NOTE_BG1 -> ContextCompat.getDrawable(
-                context,
-                R.drawable.background_note_1
-            )
-            currentNoteModal.bg == NoteModel.NOTE_BG2 -> ContextCompat.getDrawable(
-                context,
-                R.drawable.background_note_2
-            )
-            currentNoteModal.bg == NoteModel.NOTE_BG3 -> ContextCompat.getDrawable(
-                context,
-                R.drawable.background_note_3
-            )
-            currentNoteModal.bg == NoteModel.NOTE_BG4 -> ContextCompat.getDrawable(
-                context,
-                R.drawable.background_note_4
-            )
-            currentNoteModal.bg == NoteModel.NOTE_BG5 -> ContextCompat.getDrawable(
-                context,
-                R.drawable.background_note_5
-            )
-
-            else -> ContextCompat.getDrawable(context, R.drawable.background_note_0)
-        }
+        holder.container.background = Utils.getBackGroundRes(context, currentNoteModal.bg)
         holder.selectedItemView.inVisible()
 
     }

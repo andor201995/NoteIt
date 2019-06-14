@@ -43,6 +43,7 @@ class NoteViewModel(application: Application, uid: String) : AndroidViewModel(ap
                 selectedNote = newNoteModel, bottomMenuEvent = BottomMenuEvent.AddNote
             )
         )
+        dismissBottomSheet()
         insert(newNoteModel)
     }
 

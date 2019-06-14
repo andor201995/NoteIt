@@ -6,11 +6,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import com.andor.navigate.notepad.R
 import com.andor.navigate.notepad.core.NoteViewModel
+import com.andor.navigate.notepad.core.Utils
 import com.andor.navigate.notepad.listing.dao.NoteModel
 import kotlinx.android.synthetic.main.fragment_add_new_note.*
 import java.util.*
@@ -32,19 +34,27 @@ class AddNewNoteFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProviders.of(activity!!).get(NoteViewModel::class.java)
-        setButtonClickListener()
+        viewModel.appStateRelay.value!!.let {
+            if (it.selectedNote != null && (!it.selectedNote.id.isBlank() || NoteModel.DEFAULT_ID != it.selectedNote.id)) {
+                view!!.background = Utils.getBackGroundRes(context!!, it.selectedNote.bg)
+                newNoteHeadText.setText(it.selectedNote.head, TextView.BufferType.EDITABLE)
+                setButtonClickListener(it.selectedNote)
+            } else {
+                val newNoteModel = NoteModel(
+                    id = UUID.randomUUID().toString()
+                )
+                setButtonClickListener(newNoteModel)
+            }
+        }
     }
 
-    private fun setButtonClickListener() {
+    private fun setButtonClickListener(noteModel: NoteModel) {
         newNoteButtonAccept.setOnClickListener {
-            val newUUID = UUID.randomUUID().toString()
-            val newNoteModel = NoteModel(
-                newNoteHeadText.text.toString(),
-                id = newUUID,
-                bg = selectedBGType
-
+            viewModel.actionAddNote(
+                noteModel.copy(
+                    head = newNoteHeadText.text.toString(), bg = selectedBGType
+                )
             )
-            viewModel.actionAddNote(newNoteModel)
         }
         newNoteButtonCancel.setOnClickListener {
             viewModel.dismissBottomSheet()

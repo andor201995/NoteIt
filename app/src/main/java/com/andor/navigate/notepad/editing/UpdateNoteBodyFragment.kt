@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import com.andor.navigate.notepad.R
 import com.andor.navigate.notepad.core.NoteViewModel
+import com.andor.navigate.notepad.core.Utils
 import com.andor.navigate.notepad.listing.NotesActivity
 import kotlinx.android.synthetic.main.fragment_update_note.*
 import java.util.*
@@ -35,6 +36,7 @@ class UpdateNoteBodyFragment : Fragment() {
                 }
                 val headText = it.head
                 (activity as NotesActivity).setActionBarTitle(headText)
+                view!!.background = Utils.getBackGroundRes(context!!, it.bg)
             }
         }
     }
