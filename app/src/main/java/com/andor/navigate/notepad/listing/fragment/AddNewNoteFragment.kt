@@ -10,7 +10,6 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import com.andor.navigate.notepad.R
-import com.andor.navigate.notepad.core.BottomMenuEvent
 import com.andor.navigate.notepad.core.NoteViewModel
 import com.andor.navigate.notepad.listing.dao.NoteModel
 import kotlinx.android.synthetic.main.fragment_add_new_note.*
@@ -45,17 +44,10 @@ class AddNewNoteFragment : Fragment() {
                 bg = selectedBGType
 
             )
-            viewModel.insert(newNoteModel)
-            viewModel.appStateRelay.postValue(
-                viewModel.appStateRelay.value!!.copy(
-                    selectedNote = newNoteModel, bottomMenuEvent = BottomMenuEvent.AddNote
-                )
-            )
+            viewModel.actionAddNote(newNoteModel)
         }
         newNoteButtonCancel.setOnClickListener {
-            viewModel.appStateRelay.postValue(
-                viewModel.appStateRelay.value!!.copy(bottomMenuEvent = BottomMenuEvent.Close)
-            )
+            viewModel.dismissBottomSheet()
         }
 
         setNoteBackGroundButtonListener()
@@ -110,4 +102,10 @@ class AddNewNoteFragment : Fragment() {
         btn_bg_5.setBackgroundColor(Color.TRANSPARENT)
 
     }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        viewModel.dismissBottomSheet()
+    }
+
 }

@@ -7,8 +7,10 @@ data class AppState(
     val listingType: ListingType = ListingType.Linear,
     val listOfAllNotes: ArrayList<NoteModel> = ArrayList(),
     val currentUserID: String,
-    val bottomMenuEvent: BottomMenuEvent = BottomMenuEvent.Close
+    val bottomMenuEvent: BottomMenuEvent = BottomMenuEvent.Close,
+    val bottomMenuType: BottomMenuType = BottomMenuType.None
 )
+
 
 sealed class ListingType {
     object Linear : ListingType()
@@ -20,4 +22,10 @@ sealed class BottomMenuEvent {
     object Open : BottomMenuEvent()
     object AddNote : BottomMenuEvent()
     object Close : BottomMenuEvent()
+}
+
+sealed class BottomMenuType {
+    object None : BottomMenuType()
+    object Setting : BottomMenuType()
+    object AddNote : BottomMenuType()
 }
