@@ -71,7 +71,7 @@ class UserAuthentication(private val iTalkToUI: ITalkToUI) : UserAuth {
                 if (it.result == null || it.result!!.documents.size == 0) {
                     val defaultData = hashMapOf("head" to "Hello", "body" to "Welcome to NoteIt...")
                     notesRef
-                        .document("Open")
+                        .document("Default")
                         .set(defaultData)
                 }
             }
