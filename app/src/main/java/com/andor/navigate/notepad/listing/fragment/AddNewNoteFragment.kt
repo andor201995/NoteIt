@@ -7,16 +7,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.fragment.NavHostFragment.findNavController
 import com.andor.navigate.notepad.R
 import com.andor.navigate.notepad.core.NoteViewModel
 import com.andor.navigate.notepad.listing.dao.NoteModel
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import kotlinx.android.synthetic.main.fragment_add_new_note.*
 import java.util.*
 
 
-class AddNewNoteFragment : Fragment() {
+class AddNewNoteFragment : BottomSheetDialogFragment() {
 
     private lateinit var viewModel: NoteViewModel
     private var selectedBGType: String = NoteModel.NOTE_BG0
@@ -44,10 +45,12 @@ class AddNewNoteFragment : Fragment() {
                 bg = selectedBGType
 
             )
-            viewModel.actionAddNote(newNoteModel)
+            viewModel.insert(newNoteModel)
+            findNavController(this).navigate(R.id.action_addNewNoteFragment_to_updateNoteFragment)
+
         }
         newNoteButtonCancel.setOnClickListener {
-            viewModel.dismissBottomSheet()
+            findNavController(this).navigateUp()
         }
 
         setNoteBackGroundButtonListener()
@@ -102,10 +105,4 @@ class AddNewNoteFragment : Fragment() {
         btn_bg_5.setBackgroundColor(Color.TRANSPARENT)
 
     }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        viewModel.dismissBottomSheet()
-    }
-
 }

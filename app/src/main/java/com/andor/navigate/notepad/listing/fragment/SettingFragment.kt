@@ -7,17 +7,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.fragment.NavHostFragment.findNavController
 import com.andor.navigate.notepad.R
-import com.andor.navigate.notepad.auth.AuthActivity
-import com.andor.navigate.notepad.auth.UserAuthentication
-import com.andor.navigate.notepad.core.BottomMenuType
 import com.andor.navigate.notepad.core.ListingType
 import com.andor.navigate.notepad.core.NoteViewModel
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import kotlinx.android.synthetic.main.fragment_setting.*
 
-class SettingFragment : Fragment() {
+class SettingFragment : BottomSheetDialogFragment() {
 
     private lateinit var viewModel: NoteViewModel
 
@@ -28,6 +26,13 @@ class SettingFragment : Fragment() {
         setHasOptionsMenu(true)
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_setting, container, false)
+    }
+
+    override fun onStart() {
+        super.onStart()
+        logout_btn.setOnClickListener {
+            findNavController(this).navigate(R.id.action_settingFragment_to_confirmationFragment)
+        }
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -52,9 +57,6 @@ class SettingFragment : Fragment() {
             }
         }
         setUpOnClickListType()
-        logout_btn.setOnClickListener {
-            logOut()
-        }
     }
 
     private fun setUpOnClickListType() {
@@ -79,19 +81,5 @@ class SettingFragment : Fragment() {
         setting_view_type_linear.setBackgroundColor(Color.TRANSPARENT)
         setting_view_type_grid.setBackgroundColor(Color.TRANSPARENT)
         setting_view_type_staggered.setBackgroundColor(Color.TRANSPARENT)
-    }
-
-    private fun logOut() {
-        context?.let {
-            val intent = AuthActivity.intent(it)
-            intent.putExtra(UserAuthentication.LOGOUT, true)
-            startActivity(intent)
-            activity!!.finish()
-        }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        viewModel.dismissBottomSheet()
     }
 }

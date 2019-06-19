@@ -6,9 +6,7 @@ data class AppState(
     val selectedNote: NoteModel? = null,
     val listingType: ListingType = ListingType.Linear,
     val listOfAllNotes: ArrayList<NoteModel> = ArrayList(),
-    val currentUserID: String,
-    val bottomMenuEvent: BottomMenuEvent = BottomMenuEvent.Close,
-    val bottomMenuType: BottomMenuType = BottomMenuType.None
+    val currentUserID: String
 )
 
 
@@ -16,16 +14,4 @@ sealed class ListingType {
     object Linear : ListingType()
     object Grid : ListingType()
     object Staggered : ListingType()
-}
-
-sealed class BottomMenuEvent {
-    object Open : BottomMenuEvent()
-    object AddNote : BottomMenuEvent()
-    object Close : BottomMenuEvent()
-}
-
-sealed class BottomMenuType {
-    object None : BottomMenuType()
-    object Setting : BottomMenuType()
-    object AddNote : BottomMenuType()
 }

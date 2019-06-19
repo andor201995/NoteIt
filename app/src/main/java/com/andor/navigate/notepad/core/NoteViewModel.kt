@@ -24,35 +24,8 @@ class NoteViewModel(application: Application, uid: String) : AndroidViewModel(ap
         repository.getAllNotes(appStateRelay.value!!.currentUserID)
     }
 
-    fun dismissBottomSheet() {
-        appStateRelay.postValue(
-            appStateRelay.value!!.copy(
-                bottomMenuType = BottomMenuType.None,
-                bottomMenuEvent = BottomMenuEvent.Close
-            )
-        )
-    }
-
     fun changeListTypeTo(listType: ListingType) {
         appStateRelay.postValue(appStateRelay.value!!.copy(listingType = listType))
-    }
-
-    fun actionAddNote(newNoteModel: NoteModel) {
-        appStateRelay.postValue(
-            appStateRelay.value!!.copy(
-                selectedNote = newNoteModel, bottomMenuEvent = BottomMenuEvent.AddNote
-            )
-        )
-        insert(newNoteModel)
-    }
-
-    fun openBottomMenu(menuType: BottomMenuType) {
-        appStateRelay.postValue(
-            appStateRelay.value?.copy(
-                bottomMenuEvent = BottomMenuEvent.Open,
-                bottomMenuType = menuType
-            )
-        )
     }
 
     fun updateSelectedNotes(noteModel: NoteModel) {

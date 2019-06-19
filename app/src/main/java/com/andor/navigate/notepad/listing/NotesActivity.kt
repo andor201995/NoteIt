@@ -6,7 +6,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.Navigation
-import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.NavHostFragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import com.andor.navigate.notepad.R
@@ -35,7 +35,7 @@ class NotesActivity : AppCompatActivity() {
             .build()
         NavigationUI.setupActionBarWithNavController(
             this,
-            NavHostFragment.findNavController(nav_host),
+            findNavController(nav_host),
             appBarConfiguration
         )
 
