@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProviders
-import androidx.navigation.Navigation
 import androidx.navigation.fragment.NavHostFragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
@@ -44,10 +43,7 @@ class NotesActivity : AppCompatActivity() {
                 .get(NoteViewModel::class.java)
     }
 
-    override fun onSupportNavigateUp(): Boolean = Navigation.findNavController(
-        this,
-        R.id.nav_host
-    ).navigateUp()
+    override fun onSupportNavigateUp(): Boolean = findNavController(nav_host).navigateUp()
 
     fun setActionBarTitle(title: String) {
         toolbar.title = title
