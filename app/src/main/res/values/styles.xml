@@ -28,5 +28,12 @@
         <item name="android:background">@drawable/background_bottom_menu</item>
     </style>
 
+    <style name="AppTheme.Splash">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="windowActionModeOverlay">true</item>
+        <!--<item name="android:colorBackground">@color/colorPrimary</item>-->
+        <item name="android:windowBackground">@drawable/splash_screen</item>
+    </style>
 
 </resources>
