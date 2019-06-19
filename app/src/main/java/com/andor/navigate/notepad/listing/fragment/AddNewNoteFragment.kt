@@ -45,7 +45,7 @@ class AddNewNoteFragment : BottomSheetDialogFragment() {
                 bg = selectedBGType
 
             )
-            viewModel.insert(newNoteModel)
+            viewModel.addNewNote(newNoteModel)
             findNavController(this).navigate(R.id.action_addNewNoteFragment_to_updateNoteFragment)
 
         }

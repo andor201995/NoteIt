@@ -32,6 +32,11 @@ class NoteViewModel(application: Application, uid: String) : AndroidViewModel(ap
         appStateRelay.postValue(appStateRelay.value!!.copy(selectedNote = noteModel))
     }
 
+    fun addNewNote(newNoteModel: NoteModel) {
+        updateSelectedNotes(newNoteModel)
+        insert(newNoteModel)
+    }
+
 }
 
 
