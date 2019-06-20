@@ -39,6 +39,7 @@ android {
         exclude 'META-INF/ASL2.0'
         exclude 'META-INF/atomicfu.kotlin_module'
     }
+    sourceSets { main { assets.srcDirs = ['src/main/assets'] } }
 }
 
 dependencies {
