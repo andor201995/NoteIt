@@ -61,7 +61,7 @@ open class BottomSheetMenuFragment : BottomSheetDialogFragment() {
         super.onStart()
 
         dialog?.window?.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
-        val bottomSheet = dialog.findViewById(com.google.android.material.R.id.design_bottom_sheet) as FrameLayout
+        val bottomSheet = dialog!!.findViewById(com.google.android.material.R.id.design_bottom_sheet) as FrameLayout
         val bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet)
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
 
