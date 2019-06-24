@@ -113,9 +113,4 @@ class AddNewNoteFragment : Fragment() {
 
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        viewModel.dismissBottomSheet()
-    }
-
 }

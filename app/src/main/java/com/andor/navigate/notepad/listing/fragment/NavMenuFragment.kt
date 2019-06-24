@@ -34,8 +34,12 @@ class NavMenuFragment : Fragment() {
         super.onStart()
         val navController = Navigation.findNavController(view!!)
         when (viewModel.appStateRelay.value!!.bottomMenuType) {
-            is BottomMenuType.AddNote -> navController.navigate(R.id.action_navMenuFragment_to_addNewNoteFragment)
-            is BottomMenuType.Setting -> navController.navigate(R.id.action_navMenuFragment_to_settingFragment)
+            is BottomMenuType.AddNote -> {
+                navController.navigate(R.id.action_navMenuFragment_to_addNewNoteFragment)
+            }
+            is BottomMenuType.Setting -> {
+                navController.navigate(R.id.action_navMenuFragment_to_settingFragment)
+            }
         }
     }
 }

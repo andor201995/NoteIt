@@ -13,7 +13,6 @@
     <string name="delete">Delete</string>
     <string name="edit">Edit</string>
 
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
     <string name="login">Login</string>
@@ -25,4 +24,7 @@
     <string name="list_view_type">List View Type</string>
     <string name="add_note">Add Note</string>
     <string name="note_it">Note It</string>
+    <string name="logout_txt">Sure you want to logout?</string>
+    <string name="logout_yes">Yes</string>
+    <string name="logout_no">No</string>
 </resources>
