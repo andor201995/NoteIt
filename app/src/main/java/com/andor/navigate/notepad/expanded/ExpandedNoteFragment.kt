@@ -52,8 +52,6 @@ class ExpandedNoteFragment : Fragment() {
                 activity!!.supportFragmentManager,
                 "Bottom_Sheet_add_note"
             )
-        } else {
-            bottomSheetMenuFragment.dismiss()
         }
     }
 
@@ -100,8 +98,4 @@ class ExpandedNoteFragment : Fragment() {
         Navigation.findNavController(view!!).navigate(action)
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        viewModel.dismissBottomSheet()
-    }
 }

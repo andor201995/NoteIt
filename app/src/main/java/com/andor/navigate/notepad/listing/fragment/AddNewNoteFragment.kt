@@ -55,6 +55,7 @@ class AddNewNoteFragment : Fragment() {
                     head = newNoteHeadText.text.toString(), bg = selectedBGType
                 )
             )
+            viewModel.dismissBottomSheet()
         }
         newNoteButtonCancel.setOnClickListener {
             viewModel.dismissBottomSheet()
