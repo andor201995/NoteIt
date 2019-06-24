@@ -34,7 +34,7 @@ class AddNewNoteFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProviders.of(activity!!).get(NoteViewModel::class.java)
-        viewModel.appStateRelay.value!!.let {
+        viewModel.getAppStateStream().value!!.let {
             if (it.selectedNote != null && (!it.selectedNote.id.isBlank() || NoteModel.DEFAULT_ID != it.selectedNote.id)) {
                 view!!.background = Utils.getBackGroundRes(context!!, it.selectedNote.bg)
                 newNoteHeadText.setText(it.selectedNote.head, TextView.BufferType.EDITABLE)

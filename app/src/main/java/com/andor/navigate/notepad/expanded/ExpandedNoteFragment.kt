@@ -25,7 +25,7 @@ class ExpandedNoteFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProviders.of(activity!!).get(NoteViewModel::class.java)
         expandedNoteTxt.movementMethod = ScrollingMovementMethod()
-        viewModel.appStateRelay.observe(this, Observer { appState ->
+        viewModel.getAppStateStream().observe(this, Observer { appState ->
             appState.selectedNote?.let {
                 expandedNoteTxt.text = it.body
                 setDoubleTapListener()
@@ -40,7 +40,7 @@ class ExpandedNoteFragment : Fragment() {
     private fun handleBottomSheet(appState: AppState) {
         if (::oldAppState.isInitialized
             && ((oldAppState.bottomMenuType != appState.bottomMenuType && appState.bottomMenuType is BottomMenuType.AddNote)
-                    || (oldAppState.bottomMenuEvent != appState.bottomMenuEvent && appState.bottomMenuEvent is BottomMenuEvent.Open))
+                    || (oldAppState.bottomMenuEvent != appState.bottomMenuEvent && appState.bottomMenuEvent.peekContent() is BottomMenuEvent.Open))
         ) {
             openBottomMenu()
         }

@@ -102,7 +102,7 @@ class NoteListingFragment : Fragment() {
     }
 
     private fun bindAppStateStream() {
-        viewModel.appStateRelay.observe(this, Observer { appState ->
+        viewModel.getAppStateStream().observe(this, Observer { appState ->
             appState?.let { notNullAppState ->
                 updateRecyclerView(notNullAppState)
                 handleBottomSheetEvent(notNullAppState)
@@ -210,6 +210,7 @@ class NoteListingFragment : Fragment() {
             sendAddNoteBottomSheetCommand(BottomMenuType.Setting)
         }
         if (item.itemId == R.id.action_add) {
+            viewModel.updateSelectedNotes(NoteModel())
             sendAddNoteBottomSheetCommand(BottomMenuType.AddNote)
         }
         return super.onOptionsItemSelected(item)

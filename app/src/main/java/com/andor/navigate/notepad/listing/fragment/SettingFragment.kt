@@ -33,7 +33,7 @@ class SettingFragment : Fragment() {
         viewModel = ViewModelProviders.of(activity!!).get(NoteViewModel::class.java)
 
         //init setting background
-        viewModel.appStateRelay.value!!.let {
+        viewModel.getAppStateStream().value!!.let {
             when (it.listingType) {
                 is ListingType.Linear -> {
                     setting_view_type_linear.background =

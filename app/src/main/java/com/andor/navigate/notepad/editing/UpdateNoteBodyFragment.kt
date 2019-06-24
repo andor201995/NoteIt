@@ -26,7 +26,7 @@ class UpdateNoteBodyFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProviders.of(activity!!).get(NoteViewModel::class.java)
 
-        viewModel.appStateRelay.value?.let { appState ->
+        viewModel.getAppStateStream().value?.let { appState ->
 
             appState.selectedNote?.let {
                 if (UpdateNoteBodyFragmentArgs.fromBundle(arguments!!).editMode) {
@@ -67,7 +67,7 @@ class UpdateNoteBodyFragment : Fragment() {
     }
 
     private fun updateNoteModel(s: Editable) {
-        val value = viewModel.appStateRelay.value!!
+        val value = viewModel.getAppStateStream().value!!
         val newNoteModel = value.selectedNote!!.copy(body = s.toString())
         viewModel.insert(newNoteModel)
     }

@@ -33,7 +33,7 @@ class NavMenuFragment : Fragment() {
     override fun onStart() {
         super.onStart()
         val navController = Navigation.findNavController(view!!)
-        when (viewModel.appStateRelay.value!!.bottomMenuType) {
+        when (viewModel.getAppStateStream().value!!.bottomMenuType) {
             is BottomMenuType.AddNote -> {
                 navController.navigate(R.id.action_navMenuFragment_to_addNewNoteFragment)
             }
