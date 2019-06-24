@@ -7,7 +7,7 @@ data class AppState(
     val listingType: ListingType = ListingType.Linear,
     val listOfAllNotes: ArrayList<NoteModel> = ArrayList(),
     val currentUserID: String,
-    val bottomMenuEvent: BottomMenuEvent = BottomMenuEvent.Close,
+    val bottomMenuEvent: Event<BottomMenuEvent> = Event(BottomMenuEvent.Close),
     val bottomMenuType: BottomMenuType = BottomMenuType.None
 )
 

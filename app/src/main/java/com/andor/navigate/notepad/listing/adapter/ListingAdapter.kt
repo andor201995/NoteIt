@@ -20,7 +20,7 @@ class ListingAdapter(
 ) : RecyclerView.Adapter<ListingAdapter.ListingHolder>() {
 
     init {
-        setHasStableIds(true)
+//        setHasStableIds(true)
     }
 
     override fun getItemCount(): Int {
@@ -132,6 +132,9 @@ class MyDiffCallback(
         return oldNoteList[oldItemPosition] == newNoteList[newItemPosition]
     }
 
+    override fun getChangePayload(oldItemPosition: Int, newItemPosition: Int): Any? {
+        return super.getChangePayload(oldItemPosition, newItemPosition)
+    }
 }
 
 sealed class ListItemEvent {

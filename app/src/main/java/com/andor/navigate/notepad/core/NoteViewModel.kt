@@ -28,7 +28,7 @@ class NoteViewModel(application: Application, uid: String) : AndroidViewModel(ap
         appStateRelay.postValue(
             appStateRelay.value!!.copy(
                 bottomMenuType = BottomMenuType.None,
-                bottomMenuEvent = BottomMenuEvent.Close
+                bottomMenuEvent = Event(BottomMenuEvent.Close)
             )
         )
     }
@@ -40,7 +40,7 @@ class NoteViewModel(application: Application, uid: String) : AndroidViewModel(ap
     fun actionAddNote(newNoteModel: NoteModel) {
         appStateRelay.postValue(
             appStateRelay.value!!.copy(
-                selectedNote = newNoteModel, bottomMenuEvent = BottomMenuEvent.AddNote
+                selectedNote = newNoteModel, bottomMenuEvent = Event(BottomMenuEvent.AddNote)
             )
         )
         insert(newNoteModel)
@@ -49,7 +49,7 @@ class NoteViewModel(application: Application, uid: String) : AndroidViewModel(ap
     fun openBottomMenu(menuType: BottomMenuType) {
         appStateRelay.postValue(
             appStateRelay.value?.copy(
-                bottomMenuEvent = BottomMenuEvent.Open,
+                bottomMenuEvent = Event(BottomMenuEvent.Open),
                 bottomMenuType = menuType
             )
         )
@@ -57,6 +57,14 @@ class NoteViewModel(application: Application, uid: String) : AndroidViewModel(ap
 
     fun updateSelectedNotes(noteModel: NoteModel) {
         appStateRelay.postValue(appStateRelay.value!!.copy(selectedNote = noteModel))
+    }
+
+    fun resetMenuType() {
+        appStateRelay.postValue(
+            appStateRelay.value?.copy(
+                bottomMenuType = BottomMenuType.None
+            )
+        )
     }
 
 }

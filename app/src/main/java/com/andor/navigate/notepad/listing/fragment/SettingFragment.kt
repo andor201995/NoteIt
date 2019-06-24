@@ -9,10 +9,8 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.fragment.NavHostFragment
 import com.andor.navigate.notepad.R
-import com.andor.navigate.notepad.auth.AuthActivity
-import com.andor.navigate.notepad.auth.UserAuthentication
-import com.andor.navigate.notepad.core.BottomMenuType
 import com.andor.navigate.notepad.core.ListingType
 import com.andor.navigate.notepad.core.NoteViewModel
 import kotlinx.android.synthetic.main.fragment_setting.*
@@ -53,7 +51,7 @@ class SettingFragment : Fragment() {
         }
         setUpOnClickListType()
         logout_btn.setOnClickListener {
-            logOut()
+            NavHostFragment.findNavController(this).navigate(R.id.action_settingFragment2_to_confirmationFragment)
         }
     }
 
@@ -79,19 +77,5 @@ class SettingFragment : Fragment() {
         setting_view_type_linear.setBackgroundColor(Color.TRANSPARENT)
         setting_view_type_grid.setBackgroundColor(Color.TRANSPARENT)
         setting_view_type_staggered.setBackgroundColor(Color.TRANSPARENT)
-    }
-
-    private fun logOut() {
-        context?.let {
-            val intent = AuthActivity.intent(it)
-            intent.putExtra(UserAuthentication.LOGOUT, true)
-            startActivity(intent)
-            activity!!.finish()
-        }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        viewModel.dismissBottomSheet()
     }
 }

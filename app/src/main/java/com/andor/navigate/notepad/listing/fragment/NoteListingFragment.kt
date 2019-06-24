@@ -35,7 +35,7 @@ class NoteListingFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProviders.of(activity!!).get(NoteViewModel::class.java)
         hideKeyBoard()
-        handleAppStateChange()
+        bindAppStateStream()
         viewModel.fetchUserNotes()
     }
 
@@ -101,7 +101,7 @@ class NoteListingFragment : Fragment() {
         imm.hideSoftInputFromWindow(view!!.windowToken, 0)
     }
 
-    private fun handleAppStateChange() {
+    private fun bindAppStateStream() {
         viewModel.appStateRelay.observe(this, Observer { appState ->
             appState?.let { notNullAppState ->
                 updateRecyclerView(notNullAppState)
@@ -113,21 +113,23 @@ class NoteListingFragment : Fragment() {
     }
 
     private fun handleBottomSheetEvent(appState: AppState) {
-        if (::oldAppState.isInitialized && oldAppState.bottomMenuEvent != appState.bottomMenuEvent) {
-            when (appState.bottomMenuEvent) {
-                is BottomMenuEvent.AddNote -> {
-                    bottomSheetMenuFragment.dismiss()
-                    Navigation.findNavController(view!!).navigate(R.id.action_noteListingFragment_to_updateNoteFragment)
-                }
-                is BottomMenuEvent.Close -> bottomSheetMenuFragment.dismiss()
-                is BottomMenuEvent.Open -> {
-                    if (!bottomSheetMenuFragment.isAdded) {
-                        bottomSheetMenuFragment.show(
-                            activity!!.supportFragmentManager,
-                            "Bottom_Sheet"
-                        )
-                    } else {
+        val bottomMenuEvent = appState.bottomMenuEvent
+        bottomMenuEvent.getContentIfNotHandled()?.let {
+            if (::oldAppState.isInitialized && oldAppState.bottomMenuEvent != bottomMenuEvent) {
+                when (it) {
+                    is BottomMenuEvent.AddNote -> {
                         bottomSheetMenuFragment.dismiss()
+                        Navigation.findNavController(view!!)
+                            .navigate(R.id.action_noteListingFragment_to_updateNoteFragment)
+                    }
+                    is BottomMenuEvent.Close -> if (bottomSheetMenuFragment.isAdded) bottomSheetMenuFragment.dismiss()
+                    is BottomMenuEvent.Open -> {
+                        if (!bottomSheetMenuFragment.isAdded) {
+                            bottomSheetMenuFragment.show(
+                                activity!!.supportFragmentManager,
+                                "Bottom_Sheet"
+                            )
+                        }
                     }
                 }
             }
