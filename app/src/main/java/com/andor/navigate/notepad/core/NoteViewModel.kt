@@ -13,20 +13,17 @@ class NoteViewModel(application: Application, uid: String) : AndroidViewModel(ap
     private val repository: NoteRepoImpl = NoteRepoImpl {
         when (it) {
             is RepoEvent.UpdateAllNoteModel -> {
-                updateNoteModelList(it.noteModelList)
+                appStateRelay.postValue(appStateRelay.value!!.copy(listOfAllNotes = it.noteModelList))
             }
             is RepoEvent.InsertNoteModel -> {
-                updateSelectedNotes(noteModel = it.noteModel)
+                appStateRelay.postValue(appStateRelay.value!!.copy(selectedNote = it.noteModel))
             }
         }
     }
 
-    private fun updateNoteModelList(noteModelList: ArrayList<NoteModel>) {
-        appStateRelay.value = appStateRelay.value?.copy(listOfAllNotes = noteModelList)
-    }
-
     fun insert(note: NoteModel) = viewModelScope.launch(Dispatchers.IO) {
         repository.insert(note, appStateRelay.value!!.currentUserID)
+        appStateRelay.postValue(appStateRelay.value!!.copy(selectedNote = note))
     }
 
     fun delete(selectedNotes: HashSet<NoteModel>) = viewModelScope.launch(Dispatchers.IO) {

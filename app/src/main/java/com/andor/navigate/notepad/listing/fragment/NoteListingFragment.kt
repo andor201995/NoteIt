@@ -211,7 +211,7 @@ class NoteListingFragment : Fragment() {
         }
         if (item.itemId == R.id.action_add) {
             viewModel.updateSelectedNotes(NoteModel())
-            sendAddNoteBottomSheetCommand(BottomMenuType.AddNote)
+            sendAddNoteBottomSheetCommand(BottomMenuType.AddNote(isNewNote = true))
         }
         return super.onOptionsItemSelected(item)
     }

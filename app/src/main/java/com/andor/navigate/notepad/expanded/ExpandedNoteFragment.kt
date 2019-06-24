@@ -23,18 +23,32 @@ class ExpandedNoteFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+
         viewModel = ViewModelProviders.of(activity!!).get(NoteViewModel::class.java)
+
         expandedNoteTxt.movementMethod = ScrollingMovementMethod()
+        setDoubleTapListener()
+
         viewModel.getAppStateStream().observe(this, Observer { appState ->
+
             appState.selectedNote?.let {
                 expandedNoteTxt.text = it.body
-                setDoubleTapListener()
                 (activity as NotesActivity).setActionBarTitle(it.head)
                 view!!.background = Utils.getBackGroundRes(context!!, it.bg)
                 handleBottomSheet(appState)
             }
+            handleBottomSheetEvent(appState.bottomMenuEvent)
             oldAppState = appState
         })
+    }
+
+    private fun handleBottomSheetEvent(bottomMenuEvent: Event<BottomMenuEvent>) {
+        bottomMenuEvent.getContentIfNotHandled()?.let {
+            when (it) {
+                is BottomMenuEvent.Close -> if (bottomSheetMenuFragment.isAdded) bottomSheetMenuFragment.dismiss()
+                is BottomMenuEvent.AddNote -> if (bottomSheetMenuFragment.isAdded) bottomSheetMenuFragment.dismiss()
+            }
+        }
     }
 
     private fun handleBottomSheet(appState: AppState) {
@@ -89,7 +103,7 @@ class ExpandedNoteFragment : Fragment() {
     }
 
     private fun setBottomMenu() {
-        viewModel.openBottomMenu(BottomMenuType.AddNote)
+        viewModel.openBottomMenu(BottomMenuType.AddNote(isNewNote = false))
     }
 
     private fun operEditor() {

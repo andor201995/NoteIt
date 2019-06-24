@@ -11,6 +11,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import com.andor.navigate.notepad.R
+import com.andor.navigate.notepad.core.BottomMenuType
 import com.andor.navigate.notepad.core.NoteViewModel
 import com.andor.navigate.notepad.core.Utils
 import com.andor.navigate.notepad.listing.dao.NoteModel
@@ -35,21 +36,36 @@ class AddNewNoteFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProviders.of(activity!!).get(NoteViewModel::class.java)
         viewModel.getAppStateStream().value!!.let {
-            if (it.selectedNote != null && (!it.selectedNote.id.isBlank() || NoteModel.DEFAULT_ID != it.selectedNote.id)) {
-                view!!.background = Utils.getBackGroundRes(context!!, it.selectedNote.bg)
+            if (it.bottomMenuType is BottomMenuType.AddNote && !it.bottomMenuType.isNewNote) {
+                view!!.background = Utils.getBackGroundRes(context!!, it.selectedNote!!.bg)
                 newNoteHeadText.setText(it.selectedNote.head, TextView.BufferType.EDITABLE)
-                setButtonClickListener(it.selectedNote)
+                oldNoteUpdateButton.visibility = View.VISIBLE
+                newNoteButtonAccept.visibility = View.GONE
             } else {
-                val newNoteModel = NoteModel(
-                    id = UUID.randomUUID().toString()
-                )
-                setButtonClickListener(newNoteModel)
+                oldNoteUpdateButton.visibility = View.GONE
+                newNoteButtonAccept.visibility = View.VISIBLE
             }
+            setButtonClickListener()
         }
     }
 
-    private fun setButtonClickListener(noteModel: NoteModel) {
+    private fun setButtonClickListener() {
         newNoteButtonAccept.setOnClickListener {
+            val noteModel = NoteModel(
+                id = UUID.randomUUID().toString(),
+                head = newNoteHeadText.text.toString(),
+                bg = selectedBGType
+            )
+            viewModel.actionAddNote(noteModel)
+            viewModel.dismissBottomSheet()
+
+        }
+        newNoteButtonCancel.setOnClickListener {
+            viewModel.dismissBottomSheet()
+        }
+
+        oldNoteUpdateButton.setOnClickListener {
+            val noteModel = viewModel.getAppStateStream().value!!.selectedNote!!
             viewModel.actionAddNote(
                 noteModel.copy(
                     head = newNoteHeadText.text.toString(), bg = selectedBGType
@@ -57,10 +73,6 @@ class AddNewNoteFragment : Fragment() {
             )
             viewModel.dismissBottomSheet()
         }
-        newNoteButtonCancel.setOnClickListener {
-            viewModel.dismissBottomSheet()
-        }
-
         setNoteBackGroundButtonListener()
     }
 

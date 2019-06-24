@@ -27,5 +27,5 @@ sealed class BottomMenuEvent {
 sealed class BottomMenuType {
     object None : BottomMenuType()
     object Setting : BottomMenuType()
-    object AddNote : BottomMenuType()
+    data class AddNote(val isNewNote: Boolean = false) : BottomMenuType()
 }
