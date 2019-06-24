@@ -48,7 +48,7 @@ class NoteViewModel(application: Application, uid: String) : AndroidViewModel(ap
         appStateRelay.value = appStateRelay.value!!.copy(listingType = listType)
     }
 
-    fun actiwonAddNote(newNoteModel: NoteModel) {
+    fun actionAddNote(newNoteModel: NoteModel) {
         appStateRelay.value =
             appStateRelay.value!!.copy(
                 selectedNote = newNoteModel, bottomMenuEvent = Event(BottomMenuEvent.AddNote)
