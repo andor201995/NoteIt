@@ -9,8 +9,8 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.FrameLayout
 import androidx.lifecycle.ViewModelProviders
-import androidx.navigation.Navigation
 import androidx.navigation.fragment.FragmentNavigator
+import androidx.navigation.fragment.NavHostFragment.findNavController
 import com.andor.navigate.notepad.R
 import com.andor.navigate.notepad.core.NoteViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -44,12 +44,10 @@ open class BottomSheetMenuFragment : BottomSheetDialogFragment() {
         return object : BottomSheetDialog(activity!!, theme) {
             override fun onBackPressed() {
                 val fragment = childFragmentManager.fragments[0]
-
-                val navigateUp = Navigation.findNavController(fragment.view!!).navigateUp()
+                val navController = findNavController(fragment)
                 //root fragment to dismiss
-                val className =
-                    (Navigation.findNavController(fragment.view!!).currentDestination as FragmentNavigator.Destination).className
-                if (!navigateUp || className.equals(NavMenuFragment::class.java.canonicalName)) {
+                val className = (navController.currentDestination as FragmentNavigator.Destination).className
+                if (!navController.navigateUp() || className.equals(NavMenuFragment::class.java.canonicalName)) {
                     dismiss()
                 }
             }

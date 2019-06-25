@@ -7,7 +7,7 @@ import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import androidx.navigation.Navigation
+import androidx.navigation.fragment.NavHostFragment.findNavController
 import com.andor.navigate.notepad.R
 import com.andor.navigate.notepad.core.*
 import com.andor.navigate.notepad.listing.NotesActivity
@@ -109,7 +109,7 @@ class ExpandedNoteFragment : Fragment() {
     private fun operEditor() {
         val action =
             ExpandedNoteFragmentDirections.actionExpandedNoteFragmentToUpdateNoteFragment(true)
-        Navigation.findNavController(view!!).navigate(action)
+        findNavController(this).navigate(action)
     }
 
 }

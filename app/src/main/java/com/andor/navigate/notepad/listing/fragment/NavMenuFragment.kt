@@ -7,7 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
-import androidx.navigation.Navigation
+import androidx.navigation.fragment.NavHostFragment.findNavController
 import com.andor.navigate.notepad.R
 import com.andor.navigate.notepad.core.BottomMenuType
 import com.andor.navigate.notepad.core.NoteViewModel
@@ -32,7 +32,7 @@ class NavMenuFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
-        val navController = Navigation.findNavController(view!!)
+        val navController = findNavController(this)
         when (viewModel.getAppStateStream().value!!.bottomMenuType) {
             is BottomMenuType.AddNote -> {
                 navController.navigate(R.id.action_navMenuFragment_to_addNewNoteFragment)

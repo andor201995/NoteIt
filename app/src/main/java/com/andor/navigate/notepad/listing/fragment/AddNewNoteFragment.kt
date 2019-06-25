@@ -123,7 +123,6 @@ class AddNewNoteFragment : Fragment() {
         btn_bg_3.setBackgroundColor(Color.TRANSPARENT)
         btn_bg_4.setBackgroundColor(Color.TRANSPARENT)
         btn_bg_5.setBackgroundColor(Color.TRANSPARENT)
-
     }
 
 }
