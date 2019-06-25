@@ -9,7 +9,7 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
-import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.NavHostFragment.findNavController
 import com.andor.navigate.notepad.R
 import com.andor.navigate.notepad.core.ListingType
 import com.andor.navigate.notepad.core.NoteViewModel
@@ -33,7 +33,7 @@ class SettingFragment : Fragment() {
         viewModel = ViewModelProviders.of(activity!!).get(NoteViewModel::class.java)
 
         //init setting background
-        viewModel.appStateRelay.value!!.let {
+        viewModel.getAppStateStream().value!!.let {
             when (it.listingType) {
                 is ListingType.Linear -> {
                     setting_view_type_linear.background =
@@ -51,7 +51,7 @@ class SettingFragment : Fragment() {
         }
         setUpOnClickListType()
         logout_btn.setOnClickListener {
-            NavHostFragment.findNavController(this).navigate(R.id.action_settingFragment2_to_confirmationFragment)
+            findNavController(this).navigate(R.id.action_settingFragment2_to_confirmationFragment)
         }
     }
 

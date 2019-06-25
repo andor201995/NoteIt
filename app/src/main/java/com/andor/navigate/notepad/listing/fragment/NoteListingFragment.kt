@@ -8,7 +8,7 @@ import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import androidx.navigation.Navigation
+import androidx.navigation.fragment.NavHostFragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -102,7 +102,7 @@ class NoteListingFragment : Fragment() {
     }
 
     private fun bindAppStateStream() {
-        viewModel.appStateRelay.observe(this, Observer { appState ->
+        viewModel.getAppStateStream().observe(viewLifecycleOwner, Observer { appState ->
             appState?.let { notNullAppState ->
                 updateRecyclerView(notNullAppState)
                 handleBottomSheetEvent(notNullAppState)
@@ -119,7 +119,7 @@ class NoteListingFragment : Fragment() {
                 when (it) {
                     is BottomMenuEvent.AddNote -> {
                         bottomSheetMenuFragment.dismiss()
-                        Navigation.findNavController(view!!)
+                        findNavController(this)
                             .navigate(R.id.action_noteListingFragment_to_updateNoteFragment)
                     }
                     is BottomMenuEvent.Close -> if (bottomSheetMenuFragment.isAdded) bottomSheetMenuFragment.dismiss()
@@ -162,7 +162,7 @@ class NoteListingFragment : Fragment() {
                     viewModel.updateSelectedNotes(it.noteModel)
                     val action =
                         NoteListingFragmentDirections.actionNoteListingFragmentToExpandedNoteFragment()
-                    Navigation.findNavController(view!!).navigate(action)
+                    findNavController(this).navigate(action)
                 } else {
                     if (selectedNotes.contains(it.noteModel)) {
                         selectedNotes.remove(it.noteModel)
@@ -210,7 +210,8 @@ class NoteListingFragment : Fragment() {
             sendAddNoteBottomSheetCommand(BottomMenuType.Setting)
         }
         if (item.itemId == R.id.action_add) {
-            sendAddNoteBottomSheetCommand(BottomMenuType.AddNote)
+            viewModel.updateSelectedNotes(NoteModel())
+            sendAddNoteBottomSheetCommand(BottomMenuType.AddNote(isNewNote = true))
         }
         return super.onOptionsItemSelected(item)
     }

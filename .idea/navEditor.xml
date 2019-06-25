@@ -13,8 +13,8 @@
                       <LayoutPositions>
                         <option name="myPosition">
                           <Point>
-                            <option name="x" value="256" />
-                            <option name="y" value="12" />
+                            <option name="x" value="249" />
+                            <option name="y" value="-170" />
                           </Point>
                         </option>
                         <option name="myPositions">
@@ -79,25 +79,17 @@
                 <map>
                   <entry key="addNewNoteFragment">
                     <value>
-                      <LayoutPositions>
-                        <option name="myPosition">
-                          <Point>
-                            <option name="x" value="256" />
-                            <option name="y" value="12" />
-                          </Point>
-                        </option>
-                      </LayoutPositions>
+                      <LayoutPositions />
+                    </value>
+                  </entry>
+                  <entry key="confirmationFragment">
+                    <value>
+                      <LayoutPositions />
                     </value>
                   </entry>
                   <entry key="navMenuFragment">
                     <value>
                       <LayoutPositions>
-                        <option name="myPosition">
-                          <Point>
-                            <option name="x" value="-130" />
-                            <option name="y" value="17" />
-                          </Point>
-                        </option>
                         <option name="myPositions">
                           <map>
                             <entry key="action_navMenuFragment_to_addNewNoteFragment">
@@ -118,11 +110,14 @@
                   <entry key="settingFragment2">
                     <value>
                       <LayoutPositions>
-                        <option name="myPosition">
-                          <Point>
-                            <option name="x" value="256" />
-                            <option name="y" value="368" />
-                          </Point>
+                        <option name="myPositions">
+                          <map>
+                            <entry key="action_settingFragment2_to_confirmationFragment">
+                              <value>
+                                <LayoutPositions />
+                              </value>
+                            </entry>
+                          </map>
                         </option>
                       </LayoutPositions>
                     </value>

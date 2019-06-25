@@ -15,9 +15,9 @@ data class NoteModel(
 
 ) {
     companion object {
-        const val DEFAULT_ID = "Open ID"
-        const val DEFAULT_BODY = "Open Body"
-        const val DEFAULT_HEAD = "Open Head"
+        const val DEFAULT_ID = "Default ID"
+        const val DEFAULT_BODY = "Default Body"
+        const val DEFAULT_HEAD = "Default Head"
         const val NOTE_BG0 = "BG0"
         const val NOTE_BG1 = "BG1"
         const val NOTE_BG2 = "BG2"

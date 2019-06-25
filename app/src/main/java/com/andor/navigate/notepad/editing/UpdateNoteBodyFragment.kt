@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import com.andor.navigate.notepad.R
 import com.andor.navigate.notepad.core.NoteViewModel
+import com.andor.navigate.notepad.core.Utils
 import com.andor.navigate.notepad.listing.NotesActivity
 import kotlinx.android.synthetic.main.fragment_update_note.*
 import java.util.*
@@ -25,7 +26,7 @@ class UpdateNoteBodyFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProviders.of(activity!!).get(NoteViewModel::class.java)
 
-        viewModel.appStateRelay.value?.let { appState ->
+        viewModel.getAppStateStream().value?.let { appState ->
 
             appState.selectedNote?.let {
                 if (UpdateNoteBodyFragmentArgs.fromBundle(arguments!!).editMode) {
@@ -35,6 +36,7 @@ class UpdateNoteBodyFragment : Fragment() {
                 }
                 val headText = it.head
                 (activity as NotesActivity).setActionBarTitle(headText)
+                view!!.background = Utils.getBackGroundRes(context!!, it.bg)
             }
         }
     }
@@ -65,7 +67,7 @@ class UpdateNoteBodyFragment : Fragment() {
     }
 
     private fun updateNoteModel(s: Editable) {
-        val value = viewModel.appStateRelay.value!!
+        val value = viewModel.getAppStateStream().value!!
         val newNoteModel = value.selectedNote!!.copy(body = s.toString())
         viewModel.insert(newNoteModel)
     }

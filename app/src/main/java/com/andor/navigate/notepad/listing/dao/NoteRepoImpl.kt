@@ -2,13 +2,12 @@ package com.andor.navigate.notepad.listing.dao
 
 import android.util.Log
 import androidx.annotation.WorkerThread
-import androidx.lifecycle.MutableLiveData
 import com.andor.navigate.notepad.auth.UserAuthentication.Companion.TAG
-import com.andor.navigate.notepad.core.AppState
+import com.andor.navigate.notepad.core.RepoEvent
 import com.google.firebase.firestore.FirebaseFirestore
 
 
-class NoteRepoImpl(private val appStateRelay: MutableLiveData<AppState>) {
+class NoteRepoImpl(private val callback: (RepoEvent) -> Unit) {
     private val db = FirebaseFirestore.getInstance()
 
     @WorkerThread
@@ -20,13 +19,13 @@ class NoteRepoImpl(private val appStateRelay: MutableLiveData<AppState>) {
             db.collection("Users").document(uid).collection("Notes")
                 .document()
                 .set(noteModel).addOnSuccessListener {
-                    appStateRelay.postValue(appStateRelay.value!!.copy(selectedNote = noteModel))
+                    callback.invoke(RepoEvent.InsertNoteModel(noteModel))
                 }
         } else {
             db.collection("Users").document(uid).collection("Notes")
                 .document(noteModel.id)
                 .set(noteModel).addOnSuccessListener {
-                    appStateRelay.postValue(appStateRelay.value!!.copy(selectedNote = noteModel))
+                    callback.invoke(RepoEvent.InsertNoteModel(noteModel))
                 }
         }
 
@@ -54,7 +53,7 @@ class NoteRepoImpl(private val appStateRelay: MutableLiveData<AppState>) {
                         noteObject.id = doc.id
                         list.add(noteObject)
                     }
-                    appStateRelay.postValue(appStateRelay.value!!.copy(listOfAllNotes = list))
+                    callback.invoke(RepoEvent.UpdateAllNoteModel(list))
                 } else {
                     Log.d(TAG, "Current data: null")
                 }

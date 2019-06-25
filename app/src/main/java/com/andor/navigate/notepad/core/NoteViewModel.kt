@@ -8,12 +8,22 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class NoteViewModel(application: Application, uid: String) : AndroidViewModel(application) {
-    val appStateRelay = MutableLiveData<AppState>(AppState(currentUserID = uid))
+    private val appStateRelay = MutableLiveData<AppState>(AppState(currentUserID = uid))
 
-    private val repository: NoteRepoImpl = NoteRepoImpl(appStateRelay)
+    private val repository: NoteRepoImpl = NoteRepoImpl {
+        when (it) {
+            is RepoEvent.UpdateAllNoteModel -> {
+                appStateRelay.postValue(appStateRelay.value!!.copy(listOfAllNotes = it.noteModelList))
+            }
+            is RepoEvent.InsertNoteModel -> {
+                appStateRelay.postValue(appStateRelay.value!!.copy(selectedNote = it.noteModel))
+            }
+        }
+    }
 
     fun insert(note: NoteModel) = viewModelScope.launch(Dispatchers.IO) {
         repository.insert(note, appStateRelay.value!!.currentUserID)
+        appStateRelay.postValue(appStateRelay.value!!.copy(selectedNote = note))
     }
 
     fun delete(selectedNotes: HashSet<NoteModel>) = viewModelScope.launch(Dispatchers.IO) {
@@ -25,47 +35,37 @@ class NoteViewModel(application: Application, uid: String) : AndroidViewModel(ap
     }
 
     fun dismissBottomSheet() {
-        appStateRelay.postValue(
-            appStateRelay.value!!.copy(
-                bottomMenuType = BottomMenuType.None,
-                bottomMenuEvent = Event(BottomMenuEvent.Close)
-            )
+        appStateRelay.value = appStateRelay.value!!.copy(
+            bottomMenuType = BottomMenuType.None,
+            bottomMenuEvent = Event(BottomMenuEvent.Close)
         )
     }
 
     fun changeListTypeTo(listType: ListingType) {
-        appStateRelay.postValue(appStateRelay.value!!.copy(listingType = listType))
+        appStateRelay.value = appStateRelay.value!!.copy(listingType = listType)
     }
 
     fun actionAddNote(newNoteModel: NoteModel) {
-        appStateRelay.postValue(
+        appStateRelay.value =
             appStateRelay.value!!.copy(
                 selectedNote = newNoteModel, bottomMenuEvent = Event(BottomMenuEvent.AddNote)
             )
-        )
         insert(newNoteModel)
     }
 
     fun openBottomMenu(menuType: BottomMenuType) {
-        appStateRelay.postValue(
-            appStateRelay.value?.copy(
-                bottomMenuEvent = Event(BottomMenuEvent.Open),
-                bottomMenuType = menuType
-            )
+        appStateRelay.value = appStateRelay.value!!.copy(
+            bottomMenuEvent = Event(BottomMenuEvent.Open),
+            bottomMenuType = menuType
         )
     }
 
     fun updateSelectedNotes(noteModel: NoteModel) {
-        appStateRelay.postValue(appStateRelay.value!!.copy(selectedNote = noteModel))
+        appStateRelay.value = appStateRelay.value!!.copy(selectedNote = noteModel)
     }
 
-    fun resetMenuType() {
-        appStateRelay.postValue(
-            appStateRelay.value?.copy(
-                bottomMenuType = BottomMenuType.None
-            )
-        )
-    }
+    fun getAppStateStream(): LiveData<AppState> = appStateRelay
+
 
 }
 
@@ -74,4 +74,9 @@ class NoteViewModelFactory(val application: Application, val uid: String) : View
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         return NoteViewModel(application, uid) as T
     }
+}
+
+sealed class RepoEvent {
+    data class InsertNoteModel(val noteModel: NoteModel) : RepoEvent()
+    data class UpdateAllNoteModel(val noteModelList: ArrayList<NoteModel>) : RepoEvent()
 }
