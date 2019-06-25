@@ -102,7 +102,7 @@ class NoteListingFragment : Fragment() {
     }
 
     private fun bindAppStateStream() {
-        viewModel.getAppStateStream().observe(this, Observer { appState ->
+        viewModel.getAppStateStream().observe(viewLifecycleOwner, Observer { appState ->
             appState?.let { notNullAppState ->
                 updateRecyclerView(notNullAppState)
                 handleBottomSheetEvent(notNullAppState)

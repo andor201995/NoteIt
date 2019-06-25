@@ -29,7 +29,7 @@ class ExpandedNoteFragment : Fragment() {
         expandedNoteTxt.movementMethod = ScrollingMovementMethod()
         setDoubleTapListener()
 
-        viewModel.getAppStateStream().observe(this, Observer { appState ->
+        viewModel.getAppStateStream().observe(viewLifecycleOwner, Observer { appState ->
 
             appState.selectedNote?.let {
                 expandedNoteTxt.text = it.body
