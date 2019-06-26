@@ -13,13 +13,14 @@ import com.andor.navigate.notepad.core.*
 import com.andor.navigate.notepad.listing.NotesActivity
 import com.andor.navigate.notepad.listing.fragment.BottomSheetMenuFragment
 import kotlinx.android.synthetic.main.fragment_expanded_note.*
+import org.koin.android.ext.android.inject
 
 
 class ExpandedNoteFragment : Fragment() {
 
     private lateinit var oldAppState: AppState
     private lateinit var viewModel: NoteViewModel
-    private val bottomSheetMenuFragment = BottomSheetMenuFragment()
+    private val bottomSheetMenuFragment: BottomSheetMenuFragment by inject()
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)

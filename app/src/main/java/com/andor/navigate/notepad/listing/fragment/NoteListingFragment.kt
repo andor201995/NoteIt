@@ -20,11 +20,12 @@ import com.andor.navigate.notepad.listing.adapter.ListItemEvent
 import com.andor.navigate.notepad.listing.adapter.ListingAdapter
 import com.andor.navigate.notepad.listing.dao.NoteModel
 import kotlinx.android.synthetic.main.fragment_note_listing.*
+import org.koin.android.ext.android.inject
 
 
 class NoteListingFragment : Fragment() {
     private lateinit var oldAppState: AppState
-    private val bottomSheetMenuFragment = BottomSheetMenuFragment()
+    private val bottomSheetMenuFragment by inject<BottomSheetMenuFragment>()
     private var longPressActionMode: androidx.appcompat.view.ActionMode? = null
     private var isLongPressed: Boolean = false
     private val selectedNotes: HashSet<NoteModel> = HashSet()

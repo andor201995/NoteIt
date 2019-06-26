@@ -11,11 +11,15 @@ import androidx.navigation.ui.NavigationUI
 import com.andor.navigate.notepad.R
 import com.andor.navigate.notepad.core.NoteViewModel
 import com.andor.navigate.notepad.core.NoteViewModelFactory
+import com.andor.navigate.notepad.listing.dao.NoteRepoImpl
 import kotlinx.android.synthetic.main.activity_listing.*
 import kotlinx.android.synthetic.main.content_main.*
+import org.koin.android.ext.android.inject
+import org.koin.core.parameter.parametersOf
 
 class NotesActivity : AppCompatActivity() {
     private lateinit var viewModel: NoteViewModel
+    private val repoImpl by inject<NoteRepoImpl> { parametersOf(intent!!.getStringExtra("uid")!!) }
 
     companion object {
         fun intent(context: Context): Intent {
@@ -39,7 +43,7 @@ class NotesActivity : AppCompatActivity() {
         )
 
         viewModel =
-            ViewModelProviders.of(this, NoteViewModelFactory(application!!, uid = intent!!.getStringExtra("uid")!!))
+            ViewModelProviders.of(this, NoteViewModelFactory(repoImpl))
                 .get(NoteViewModel::class.java)
     }
 
