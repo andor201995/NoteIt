@@ -19,10 +19,6 @@ class ListingAdapter(
 
 ) : RecyclerView.Adapter<ListingAdapter.ListingHolder>() {
 
-    init {
-//        setHasStableIds(true)
-    }
-
     override fun getItemCount(): Int {
         return noteList.size
     }
@@ -40,10 +36,6 @@ class ListingAdapter(
         holder.container.background = Utils.getBackGroundRes(context, currentNoteModal.bg)
         holder.selectedItemView.inVisible()
 
-    }
-
-    override fun getItemId(position: Int): Long {
-        return super.getItemId(position)
     }
 
     override fun getItemViewType(position: Int): Int {
@@ -107,10 +99,6 @@ class MyDiffCallback(
 
     override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
         return oldNoteList[oldItemPosition] == newNoteList[newItemPosition]
-    }
-
-    override fun getChangePayload(oldItemPosition: Int, newItemPosition: Int): Any? {
-        return super.getChangePayload(oldItemPosition, newItemPosition)
     }
 }
 

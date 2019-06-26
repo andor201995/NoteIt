@@ -8,11 +8,8 @@ import com.andor.navigate.notepad.core.AppState
 import com.google.firebase.firestore.FirebaseFirestore
 
 
-class NoteRepoImpl(private val uid: String) {
-    private val appStateRelay: MutableLiveData<AppState> = MutableLiveData(AppState(currentUserID = uid
-    ))
-    private val db = FirebaseFirestore.getInstance()
-
+class NoteRepoImpl(private val uid: String, private val db: FirebaseFirestore) {
+    private val appStateRelay: MutableLiveData<AppState> = MutableLiveData(AppState(currentUserID = uid))
     @WorkerThread
     fun insert(
         noteModel: NoteModel

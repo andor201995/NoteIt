@@ -30,7 +30,6 @@ class NoteListingFragment : Fragment() {
     private var isLongPressed: Boolean = false
     private val selectedNotes: HashSet<NoteModel> = HashSet()
     private lateinit var viewModel: NoteViewModel
-    private val gridSize = 2
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -186,6 +185,7 @@ class NoteListingFragment : Fragment() {
     private fun setRecyclerViewManager(
         appState: AppState
     ) {
+        val gridSize = 2
         listRecyclerView.layoutManager = when (appState.listingType) {
             is ListingType.Linear -> {
                 val linearLayoutManager = LinearLayoutManager(context)

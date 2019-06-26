@@ -18,7 +18,9 @@ import org.koin.android.ext.android.inject
 import org.koin.core.parameter.parametersOf
 
 class NotesActivity : AppCompatActivity() {
+
     private lateinit var viewModel: NoteViewModel
+    //    private val viewModel by viewModel<NoteViewModel>()
     private val repoImpl by inject<NoteRepoImpl> { parametersOf(intent!!.getStringExtra("uid")!!) }
 
     companion object {
@@ -43,7 +45,7 @@ class NotesActivity : AppCompatActivity() {
         )
 
         viewModel =
-            ViewModelProviders.of(this, NoteViewModelFactory(repoImpl))
+            ViewModelProviders.of(this, NoteViewModelFactory(application, repoImpl))
                 .get(NoteViewModel::class.java)
     }
 
