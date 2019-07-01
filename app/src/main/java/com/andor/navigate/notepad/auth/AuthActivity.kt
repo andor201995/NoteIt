@@ -22,9 +22,11 @@ import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import kotlinx.android.synthetic.main.activity_auth.*
+import org.koin.android.ext.android.inject
+import org.koin.core.parameter.parametersOf
 
 class AuthActivity : AppCompatActivity(), ITalkToUI {
-    private lateinit var mUserAuth: UserAuth
+    private val mUserAuth: UserAuth by inject { parametersOf(this as ITalkToUI) }
     private lateinit var mGoogleSignInClient: GoogleSignInClient
 
     private val tagGoogleSignIn = 2121
@@ -40,7 +42,6 @@ class AuthActivity : AppCompatActivity(), ITalkToUI {
             .build()
 
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso)
-        mUserAuth = UserAuthentication(this)
         val logout = intent?.getBooleanExtra(UserAuthentication.LOGOUT, false)!!
         if (!logout) {
             mUserAuth.isUserSignedIn(this)

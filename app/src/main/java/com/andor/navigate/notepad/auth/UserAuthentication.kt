@@ -9,10 +9,11 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.firestore.FirebaseFirestore
 
-class UserAuthentication(private val iTalkToUI: ITalkToUI) : UserAuth {
-    private val fireBaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
-    private val fireBaseFireStore = FirebaseFirestore.getInstance()
-
+class UserAuthentication(
+    private val iTalkToUI: ITalkToUI,
+    private val fireBaseAuth: FirebaseAuth,
+    private val fireBaseFireStore: FirebaseFirestore
+) : UserAuth {
     companion object {
         const val LOGOUT: String = "LOGOUT"
         const val TAG: String = "AUTH"

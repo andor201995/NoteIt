@@ -20,16 +20,16 @@ import com.andor.navigate.notepad.listing.adapter.ListItemEvent
 import com.andor.navigate.notepad.listing.adapter.ListingAdapter
 import com.andor.navigate.notepad.listing.dao.NoteModel
 import kotlinx.android.synthetic.main.fragment_note_listing.*
+import org.koin.android.ext.android.inject
 
 
 class NoteListingFragment : Fragment() {
     private lateinit var oldAppState: AppState
-    private val bottomSheetMenuFragment = BottomSheetMenuFragment()
+    private val bottomSheetMenuFragment by inject<BottomSheetMenuFragment>()
     private var longPressActionMode: androidx.appcompat.view.ActionMode? = null
     private var isLongPressed: Boolean = false
     private val selectedNotes: HashSet<NoteModel> = HashSet()
     private lateinit var viewModel: NoteViewModel
-    private val gridSize = 2
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -185,6 +185,7 @@ class NoteListingFragment : Fragment() {
     private fun setRecyclerViewManager(
         appState: AppState
     ) {
+        val gridSize = 2
         listRecyclerView.layoutManager = when (appState.listingType) {
             is ListingType.Linear -> {
                 val linearLayoutManager = LinearLayoutManager(context)
