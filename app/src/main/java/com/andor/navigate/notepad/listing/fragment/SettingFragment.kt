@@ -6,16 +6,19 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
+import android.widget.FrameLayout
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.NavHostFragment.findNavController
 import com.andor.navigate.notepad.R
 import com.andor.navigate.notepad.core.ListingType
 import com.andor.navigate.notepad.core.NoteViewModel
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import kotlinx.android.synthetic.main.fragment_setting.*
 
-class SettingFragment : Fragment() {
+class SettingFragment : BottomSheetDialogFragment() {
 
     private lateinit var viewModel: NoteViewModel
 
@@ -51,7 +54,7 @@ class SettingFragment : Fragment() {
         }
         setUpOnClickListType()
         logout_btn.setOnClickListener {
-            findNavController(this).navigate(R.id.action_settingFragment2_to_confirmationFragment)
+            findNavController(this).navigate(R.id.action_settingFragment_to_confirmationFragment)
         }
     }
 
@@ -77,5 +80,13 @@ class SettingFragment : Fragment() {
         setting_view_type_linear.setBackgroundColor(Color.TRANSPARENT)
         setting_view_type_grid.setBackgroundColor(Color.TRANSPARENT)
         setting_view_type_staggered.setBackgroundColor(Color.TRANSPARENT)
+    }
+
+    override fun onStart() {
+        super.onStart()
+        dialog?.window?.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
+        val bottomSheet = dialog!!.findViewById(com.google.android.material.R.id.design_bottom_sheet) as FrameLayout
+        val bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet)
+        bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
     }
 }
