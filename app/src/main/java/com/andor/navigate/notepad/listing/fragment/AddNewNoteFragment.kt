@@ -6,20 +6,24 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
+import android.widget.FrameLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.fragment.NavHostFragment.findNavController
 import com.andor.navigate.notepad.R
-import com.andor.navigate.notepad.core.BottomMenuType
 import com.andor.navigate.notepad.core.NoteViewModel
 import com.andor.navigate.notepad.core.Utils
 import com.andor.navigate.notepad.listing.dao.NoteModel
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import kotlinx.android.synthetic.main.fragment_add_new_note.*
 import java.util.*
 
 
-class AddNewNoteFragment : Fragment() {
+class AddNewNoteFragment : BottomSheetDialogFragment() {
+
 
     private lateinit var viewModel: NoteViewModel
     private var selectedBGType: String = NoteModel.NOTE_BG0
@@ -36,8 +40,11 @@ class AddNewNoteFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProviders.of(activity!!).get(NoteViewModel::class.java)
         viewModel.getAppStateStream().value!!.let {
-            if (it.bottomMenuType is BottomMenuType.AddNote && !it.bottomMenuType.isNewNote) {
+
+            val args = AddNewNoteFragmentArgs.fromBundle(arguments!!)
+            if (!args.isNewNote) {
                 view!!.background = Utils.getBackGroundRes(context!!, it.selectedNote!!.bg)
+                selectedBGType = it.selectedNote.bg
                 newNoteHeadText.setText(it.selectedNote.head, TextView.BufferType.EDITABLE)
                 oldNoteUpdateButton.visibility = View.VISIBLE
                 newNoteButtonAccept.visibility = View.GONE
@@ -57,11 +64,11 @@ class AddNewNoteFragment : Fragment() {
                 bg = selectedBGType
             )
             viewModel.actionAddNote(noteModel)
-            viewModel.dismissBottomSheet()
+            findNavController(this).navigate(R.id.action_addNewNoteFragment_to_updateNoteFragment)
 
         }
         newNoteButtonCancel.setOnClickListener {
-            viewModel.dismissBottomSheet()
+            findNavController(this).navigateUp()
         }
 
         oldNoteUpdateButton.setOnClickListener {
@@ -71,7 +78,7 @@ class AddNewNoteFragment : Fragment() {
                     head = newNoteHeadText.text.toString(), bg = selectedBGType
                 )
             )
-            viewModel.dismissBottomSheet()
+            findNavController(this).navigateUp()
         }
         setNoteBackGroundButtonListener()
     }
@@ -125,4 +132,11 @@ class AddNewNoteFragment : Fragment() {
         btn_bg_5.setBackgroundColor(Color.TRANSPARENT)
     }
 
+    override fun onStart() {
+        super.onStart()
+        dialog?.window?.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
+        val bottomSheet = dialog!!.findViewById(com.google.android.material.R.id.design_bottom_sheet) as FrameLayout
+        val bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet)
+        bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+    }
 }

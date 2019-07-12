@@ -18,12 +18,15 @@
             app:popEnterAnim="@anim/nav_default_pop_enter_anim"
             app:popExitAnim="@anim/nav_default_pop_exit_anim" />
         <action
-            android:id="@+id/action_noteListingFragment_to_updateNoteFragment"
-            app:destination="@id/updateNoteFragment"
-            app:enterAnim="@anim/nav_default_enter_anim"
-            app:exitAnim="@anim/nav_default_exit_anim"
-            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
-            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+            android:id="@+id/action_noteListingFragment_to_settingFragment"
+            app:destination="@id/settingFragment" />
+        <action
+            android:id="@+id/action_noteListingFragment_to_addNewNoteFragment"
+            app:destination="@id/addNewNoteFragment">
+            <argument
+                android:name="isNewNote"
+                android:defaultValue="true" />
+        </action>
     </fragment>
     <fragment
         android:id="@+id/expandedNoteFragment"
@@ -41,6 +44,12 @@
                 android:defaultValue="true"
                 app:argType="boolean" />
         </action>
+        <action
+            android:id="@+id/action_expandedNoteFragment_to_addNewNoteFragment"
+            app:destination="@id/addNewNoteFragment" >
+            <argument android:defaultValue="false"
+                android:name="isNewNote" />
+        </action>
     </fragment>
     <fragment
         android:id="@+id/updateNoteFragment"
@@ -53,4 +62,29 @@
             app:argType="boolean" />
 
     </fragment>
+    <dialog
+        android:id="@+id/addNewNoteFragment"
+        android:name="com.andor.navigate.notepad.listing.fragment.AddNewNoteFragment"
+        tools:layout="@layout/fragment_add_new_note">
+        <argument
+            android:name="isNewNote"
+            android:defaultValue="true"
+            app:argType="boolean" />
+        <action
+            android:id="@+id/action_addNewNoteFragment_to_updateNoteFragment"
+            app:destination="@id/updateNoteFragment" />
+    </dialog>
+    <dialog
+        android:id="@+id/settingFragment"
+        android:name="com.andor.navigate.notepad.listing.fragment.SettingFragment"
+        tools:layout="@layout/fragment_setting">
+        <action
+            android:id="@+id/action_settingFragment_to_confirmationFragment"
+            app:destination="@id/confirmationFragment" />
+    </dialog>
+    <dialog
+        android:id="@+id/confirmationFragment"
+        android:name="com.andor.navigate.notepad.listing.fragment.ConfirmationFragment"
+        android:label="fragment_confirmation"
+        tools:layout="@layout/fragment_confirmation" />
 </navigation>

@@ -34,13 +34,6 @@ class NoteViewModel(application: Application, uid: String) : AndroidViewModel(ap
         repository.getAllNotes(appStateRelay.value!!.currentUserID)
     }
 
-    fun dismissBottomSheet() {
-        appStateRelay.value = appStateRelay.value!!.copy(
-            bottomMenuType = BottomMenuType.None,
-            bottomMenuEvent = Event(BottomMenuEvent.Close)
-        )
-    }
-
     fun changeListTypeTo(listType: ListingType) {
         appStateRelay.value = appStateRelay.value!!.copy(listingType = listType)
     }
@@ -48,16 +41,9 @@ class NoteViewModel(application: Application, uid: String) : AndroidViewModel(ap
     fun actionAddNote(newNoteModel: NoteModel) {
         appStateRelay.value =
             appStateRelay.value!!.copy(
-                selectedNote = newNoteModel, bottomMenuEvent = Event(BottomMenuEvent.AddNote)
+                selectedNote = newNoteModel
             )
         insert(newNoteModel)
-    }
-
-    fun openBottomMenu(menuType: BottomMenuType) {
-        appStateRelay.value = appStateRelay.value!!.copy(
-            bottomMenuEvent = Event(BottomMenuEvent.Open),
-            bottomMenuType = menuType
-        )
     }
 
     fun updateSelectedNotes(noteModel: NoteModel) {
