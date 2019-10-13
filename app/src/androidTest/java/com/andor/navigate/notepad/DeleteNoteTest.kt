@@ -5,10 +5,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.*
+import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.filters.LargeTest
 import androidx.test.rule.ActivityTestRule
 import androidx.test.runner.AndroidJUnit4
+import com.andor.navigate.notepad.listing.adapter.ListingAdapter
 import org.hamcrest.Description
 import org.hamcrest.Matcher
 import org.hamcrest.Matchers.`is`
@@ -27,28 +29,19 @@ class DeleteNoteTest {
     var mActivityTestRule = ActivityTestRule(SplashScreenActivity::class.java)
 
     @Test
-    fun deleteNoteTest() {
-        val constraintLayout = onView(
-            allOf(
-                withId(R.id.holder_container),
-                childAtPosition(
-                    allOf(
-                        withId(R.id.listRecyclerView),
-                        childAtPosition(
-                            withClassName(`is`("androidx.coordinatorlayout.widget.CoordinatorLayout")),
-                            0
-                        )
-                    ),
-                    0
-                ),
-                isDisplayed()
+    fun deleteNote() {
+        val selectFirstItemOfRecyclerView = onView(withId(R.id.listRecyclerView))
+
+        selectFirstItemOfRecyclerView.perform(
+            RecyclerViewActions.actionOnItemAtPosition<ListingAdapter.ListingHolder>(
+                0,
+                longClick()
             )
         )
-        constraintLayout.perform(longClick())
 
         val actionMenuItemView = onView(
             allOf(
-                withId(R.id.SelectedItemDelete), withContentDescription("Delete"),
+                withId(R.id.SelectedItemDelete), withContentDescription(R.string.delete),
                 childAtPosition(
                     childAtPosition(
                         withId(R.id.action_mode_bar),
