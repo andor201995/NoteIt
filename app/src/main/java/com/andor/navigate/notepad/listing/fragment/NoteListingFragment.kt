@@ -17,6 +17,7 @@ import com.andor.navigate.notepad.R
 import com.andor.navigate.notepad.core.AppState
 import com.andor.navigate.notepad.core.ListingType
 import com.andor.navigate.notepad.core.NoteViewModel
+import com.andor.navigate.notepad.core.navigateSafe
 import com.andor.navigate.notepad.listing.NotesActivity
 import com.andor.navigate.notepad.listing.adapter.ListItemEvent
 import com.andor.navigate.notepad.listing.adapter.ListingAdapter
@@ -55,7 +56,10 @@ class NoteListingFragment : Fragment() {
 
         if (isLongPressed) {
             val actionModeCallback = object : androidx.appcompat.view.ActionMode.Callback {
-                override fun onActionItemClicked(mode: androidx.appcompat.view.ActionMode?, item: MenuItem): Boolean {
+                override fun onActionItemClicked(
+                    mode: androidx.appcompat.view.ActionMode?,
+                    item: MenuItem
+                ): Boolean {
                     return onOptionsItemSelected(item)
                 }
 
@@ -68,7 +72,10 @@ class NoteListingFragment : Fragment() {
                     return true
                 }
 
-                override fun onPrepareActionMode(mode: androidx.appcompat.view.ActionMode?, menu: Menu?): Boolean {
+                override fun onPrepareActionMode(
+                    mode: androidx.appcompat.view.ActionMode?,
+                    menu: Menu?
+                ): Boolean {
                     return true
                 }
 
@@ -129,7 +136,7 @@ class NoteListingFragment : Fragment() {
                     viewModel.updateSelectedNotes(it.noteModel)
                     val action =
                         NoteListingFragmentDirections.actionNoteListingFragmentToExpandedNoteFragment()
-                    findNavController(this).navigate(action)
+                    findNavController(this).navigateSafe(R.id.noteListingFragment, action)
                 } else {
                     if (selectedNotes.contains(it.noteModel)) {
                         selectedNotes.remove(it.noteModel)
@@ -174,11 +181,17 @@ class NoteListingFragment : Fragment() {
             longPressActionMode?.finish()
         }
         if (item.itemId == R.id.action_setting) {
-            findNavController(this).navigate(R.id.action_noteListingFragment_to_settingFragment)
+            findNavController(this).navigateSafe(
+                R.id.noteListingFragment,
+                R.id.action_noteListingFragment_to_settingFragment
+            )
         }
         if (item.itemId == R.id.action_add) {
             viewModel.updateSelectedNotes(NoteModel())
-            findNavController(this).navigate(R.id.action_noteListingFragment_to_addNewNoteFragment)
+            findNavController(this).navigateSafe(
+                R.id.noteListingFragment,
+                R.id.action_noteListingFragment_to_addNewNoteFragment
+            )
         }
         return super.onOptionsItemSelected(item)
     }

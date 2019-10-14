@@ -111,6 +111,9 @@ class UpdateNoteTest : BaseEspressoTest() {
                 isDisplayed()
             )
         )
+        actionMenuItemView.perform(longClick())
+        actionMenuItemView.perform(doubleClick())
+        pressBack()
         actionMenuItemView.perform(click())
 
         val appCompatEditText = onView(
