@@ -3,11 +3,11 @@ package com.andor.navigate.notepad
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.matcher.ViewMatchers
-import com.andor.navigate.notepad.base.BaseTest
+import com.andor.navigate.notepad.base.BaseEspressoTest
 import org.hamcrest.Matchers
 import org.junit.Test
 
-class ListTypeTest : BaseTest() {
+class ListTypeTest : BaseEspressoTest() {
 
     @Test
     fun selectGridListAdapter() {

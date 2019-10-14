@@ -15,3 +15,17 @@ sealed class ListingType {
     object Grid : ListingType()
     object Staggered : ListingType()
 }
+
+sealed class EventOnFragment {
+    object None : EventOnFragment()
+    sealed class AddNoteEvent : EventOnFragment() {
+        data class AddNote(val noteModel: NoteModel) : AddNoteEvent()
+        data class UpdateNote(val noteModel: NoteModel) : AddNoteEvent()
+        object Cancel : AddNoteEvent()
+    }
+}
+
+sealed class AlertEvent {
+    object TitleEmptyToast : AlertEvent()
+    object None : AlertEvent()
+}

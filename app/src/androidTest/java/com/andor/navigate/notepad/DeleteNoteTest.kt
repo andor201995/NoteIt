@@ -6,12 +6,12 @@ import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.longClick
 import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers.*
-import com.andor.navigate.notepad.base.BaseTest
+import com.andor.navigate.notepad.base.BaseEspressoTest
 import com.andor.navigate.notepad.listing.adapter.ListingAdapter
 import org.hamcrest.Matchers.allOf
 import org.junit.Test
 
-class DeleteNoteTest : BaseTest() {
+class DeleteNoteTest : BaseEspressoTest() {
 
     @Test
     fun deleteNote() {

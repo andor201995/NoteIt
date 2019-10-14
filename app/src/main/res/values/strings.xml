@@ -27,4 +27,5 @@
     <string name="logout_txt">Sure you want to logout?</string>
     <string name="logout_yes">Yes</string>
     <string name="logout_no">No</string>
+    <string name="empty_title_toast">Title is empty</string>
 </resources>
