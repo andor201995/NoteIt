@@ -7,8 +7,7 @@ import com.andor.navigate.notepad.core.RepoEvent
 import com.google.firebase.firestore.FirebaseFirestore
 
 
-class NoteRepoImpl(private val callback: (RepoEvent) -> Unit) {
-    private val db = FirebaseFirestore.getInstance()
+class NoteRepoImpl(private val db: FirebaseFirestore, private val callback: (RepoEvent) -> Unit) {
 
     @WorkerThread
     fun insert(

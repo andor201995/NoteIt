@@ -9,10 +9,13 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.FrameLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment.findNavController
 import com.andor.navigate.notepad.R
+import com.andor.navigate.notepad.core.AlertEvent
+import com.andor.navigate.notepad.core.EventOnFragment
 import com.andor.navigate.notepad.core.NoteViewModel
 import com.andor.navigate.notepad.core.Utils
 import com.andor.navigate.notepad.listing.dao.NoteModel
@@ -38,7 +41,7 @@ class AddNewNoteFragment : BottomSheetDialogFragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProviders.of(activity!!).get(NoteViewModel::class.java)
+        viewModel = ViewModelProvider(activity!!).get(NoteViewModel::class.java)
         viewModel.getAppStateStream().value!!.let {
 
             val args = AddNewNoteFragmentArgs.fromBundle(arguments!!)
@@ -54,6 +57,32 @@ class AddNewNoteFragment : BottomSheetDialogFragment() {
             }
             setButtonClickListener()
         }
+
+        viewModel.getAppEventStream().observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+            handleEvent(it.getContentIfNotHandled())
+        })
+
+        viewModel.getAppAlertStream().observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+            handleAlert(it.getContentIfNotHandled())
+        })
+    }
+
+    private fun handleAlert(alertEvent: AlertEvent?) {
+        when (alertEvent) {
+            is AlertEvent.TitleEmptyToast -> Toast.makeText(
+                context,
+                R.string.empty_title_toast,
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+    }
+
+    private fun handleEvent(event: EventOnFragment?) {
+        when (event) {
+            is EventOnFragment.AddNoteEvent.AddNote -> findNavController(this).navigate(R.id.action_addNewNoteFragment_to_updateNoteFragment)
+            is EventOnFragment.AddNoteEvent.UpdateNote -> findNavController(this).navigateUp()
+            is EventOnFragment.AddNoteEvent.Cancel -> findNavController(this).navigateUp()
+        }
     }
 
     private fun setButtonClickListener() {
@@ -63,22 +92,22 @@ class AddNewNoteFragment : BottomSheetDialogFragment() {
                 head = newNoteHeadText.text.toString(),
                 bg = selectedBGType
             )
-            viewModel.actionAddNote(noteModel)
-            findNavController(this).navigate(R.id.action_addNewNoteFragment_to_updateNoteFragment)
+            viewModel.actionAddNote(EventOnFragment.AddNoteEvent.AddNote(noteModel))
 
         }
         newNoteButtonCancel.setOnClickListener {
-            findNavController(this).navigateUp()
+            viewModel.actionAddNote(EventOnFragment.AddNoteEvent.Cancel)
         }
 
         oldNoteUpdateButton.setOnClickListener {
             val noteModel = viewModel.getAppStateStream().value!!.selectedNote!!
             viewModel.actionAddNote(
-                noteModel.copy(
-                    head = newNoteHeadText.text.toString(), bg = selectedBGType
+                EventOnFragment.AddNoteEvent.UpdateNote(
+                    noteModel.copy(
+                        head = newNoteHeadText.text.toString(), bg = selectedBGType
+                    )
                 )
             )
-            findNavController(this).navigateUp()
         }
         setNoteBackGroundButtonListener()
     }
@@ -86,39 +115,51 @@ class AddNewNoteFragment : BottomSheetDialogFragment() {
     private fun setNoteBackGroundButtonListener() {
         btn_bg_0.setOnClickListener {
             clearButtonBackGround()
-            btn_bg_0.background = ContextCompat.getDrawable(context!!, R.drawable.backgound_button_select)
+            btn_bg_0.background =
+                ContextCompat.getDrawable(context!!, R.drawable.backgound_button_select)
             selectedBGType = NoteModel.NOTE_BG0
-            addFragmentContainer.background = ContextCompat.getDrawable(context!!, R.drawable.background_note_0)
+            addFragmentContainer.background =
+                ContextCompat.getDrawable(context!!, R.drawable.background_note_0)
         }
         btn_bg_1.setOnClickListener {
             clearButtonBackGround()
-            btn_bg_1.background = ContextCompat.getDrawable(context!!, R.drawable.backgound_button_select)
+            btn_bg_1.background =
+                ContextCompat.getDrawable(context!!, R.drawable.backgound_button_select)
             selectedBGType = NoteModel.NOTE_BG1
-            addFragmentContainer.background = ContextCompat.getDrawable(context!!, R.drawable.background_note_1)
+            addFragmentContainer.background =
+                ContextCompat.getDrawable(context!!, R.drawable.background_note_1)
         }
         btn_bg_2.setOnClickListener {
             clearButtonBackGround()
-            btn_bg_2.background = ContextCompat.getDrawable(context!!, R.drawable.backgound_button_select)
+            btn_bg_2.background =
+                ContextCompat.getDrawable(context!!, R.drawable.backgound_button_select)
             selectedBGType = NoteModel.NOTE_BG2
-            addFragmentContainer.background = ContextCompat.getDrawable(context!!, R.drawable.background_note_2)
+            addFragmentContainer.background =
+                ContextCompat.getDrawable(context!!, R.drawable.background_note_2)
         }
         btn_bg_3.setOnClickListener {
             clearButtonBackGround()
-            btn_bg_3.background = ContextCompat.getDrawable(context!!, R.drawable.backgound_button_select)
+            btn_bg_3.background =
+                ContextCompat.getDrawable(context!!, R.drawable.backgound_button_select)
             selectedBGType = NoteModel.NOTE_BG3
-            addFragmentContainer.background = ContextCompat.getDrawable(context!!, R.drawable.background_note_3)
+            addFragmentContainer.background =
+                ContextCompat.getDrawable(context!!, R.drawable.background_note_3)
         }
         btn_bg_4.setOnClickListener {
             clearButtonBackGround()
-            btn_bg_4.background = ContextCompat.getDrawable(context!!, R.drawable.backgound_button_select)
+            btn_bg_4.background =
+                ContextCompat.getDrawable(context!!, R.drawable.backgound_button_select)
             selectedBGType = NoteModel.NOTE_BG4
-            addFragmentContainer.background = ContextCompat.getDrawable(context!!, R.drawable.background_note_4)
+            addFragmentContainer.background =
+                ContextCompat.getDrawable(context!!, R.drawable.background_note_4)
         }
         btn_bg_5.setOnClickListener {
             clearButtonBackGround()
-            btn_bg_5.background = ContextCompat.getDrawable(context!!, R.drawable.backgound_button_select)
+            btn_bg_5.background =
+                ContextCompat.getDrawable(context!!, R.drawable.backgound_button_select)
             selectedBGType = NoteModel.NOTE_BG5
-            addFragmentContainer.background = ContextCompat.getDrawable(context!!, R.drawable.background_note_5)
+            addFragmentContainer.background =
+                ContextCompat.getDrawable(context!!, R.drawable.background_note_5)
         }
 
     }
@@ -135,7 +176,8 @@ class AddNewNoteFragment : BottomSheetDialogFragment() {
     override fun onStart() {
         super.onStart()
         dialog?.window?.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
-        val bottomSheet = dialog!!.findViewById(com.google.android.material.R.id.design_bottom_sheet) as FrameLayout
+        val bottomSheet =
+            dialog!!.findViewById(com.google.android.material.R.id.design_bottom_sheet) as FrameLayout
         val bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet)
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
     }
