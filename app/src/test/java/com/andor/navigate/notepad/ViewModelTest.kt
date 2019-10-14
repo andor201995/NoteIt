@@ -33,4 +33,22 @@ class ViewModelTest : BaseUnitTest() {
             assert(alertEvent is AlertEvent.TitleEmptyToast)
         }
     }
+
+    @Test
+    fun updateNoteWithEmptyTitle() {
+        noteViewModel.actionAddNote(
+            EventOnFragment.AddNoteEvent.UpdateNote(NoteModel(head = ""))
+        )
+        noteViewModel.getAppEventStream().observeOnce { event ->
+            val eventOnFragment = event.getContentIfNotHandled()
+            assert(eventOnFragment is EventOnFragment.None)
+        }
+
+        noteViewModel.getAppAlertStream().observeOnce {
+            val alertEvent = it.getContentIfNotHandled()
+            assert(alertEvent is AlertEvent.TitleEmptyToast)
+        }
+    }
+
+
 }
