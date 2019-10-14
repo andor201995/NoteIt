@@ -79,6 +79,15 @@ class ToastMatcher(private val maxFailures: Int = DEFAULT_MAX_FAILURES) : TypeSa
         /** Default for maximum number of retries to wait for the toast to pop up */
         private const val DEFAULT_MAX_FAILURES = 5
 
+        // To assert a toast does *not* pop up:
+        /*
+        * onToast("text").check(doesNotExist())
+        * onToast(textId).check(doesNotExist())
+        *
+        * // To assert a toast does pop up:
+        * onToast("text").check(matches(isDisplayed()))
+        * onToast(textId).check(matches(isDisplayed()))
+        */
         fun onToast(text: String, maxRetries: Int = DEFAULT_MAX_FAILURES) =
             onView(withText(text)).inRoot(isToast(maxRetries))!!
 
