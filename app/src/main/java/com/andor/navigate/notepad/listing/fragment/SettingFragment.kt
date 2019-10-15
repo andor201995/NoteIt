@@ -14,6 +14,7 @@ import androidx.navigation.fragment.NavHostFragment.findNavController
 import com.andor.navigate.notepad.R
 import com.andor.navigate.notepad.core.ListingType
 import com.andor.navigate.notepad.core.NoteViewModel
+import com.andor.navigate.notepad.core.navigateSafe
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import kotlinx.android.synthetic.main.fragment_setting.*
@@ -54,7 +55,10 @@ class SettingFragment : BottomSheetDialogFragment() {
         }
         setUpOnClickListType()
         logout_btn.setOnClickListener {
-            findNavController(this).navigate(R.id.action_settingFragment_to_confirmationFragment)
+            findNavController(this).navigateSafe(
+                R.id.settingFragment,
+                R.id.action_settingFragment_to_confirmationFragment
+            )
         }
     }
 

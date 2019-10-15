@@ -31,6 +31,10 @@ class AddNoteTest : BaseEspressoTest() {
                 isDisplayed()
             )
         )
+
+        actionMenuItemView.perform(longClick())
+        actionMenuItemView.perform(doubleClick())
+        pressBack()
         actionMenuItemView.perform(click())
 
         val appCompatEditText = onView(
@@ -156,6 +160,9 @@ class AddNoteTest : BaseEspressoTest() {
                 isDisplayed()
             )
         )
+        actionMenuItemView.perform(longClick())
+        actionMenuItemView.perform(doubleClick())
+        pressBack()
         actionMenuItemView.perform(click())
 
         val appCompatEditText = onView(
@@ -255,6 +262,8 @@ class AddNoteTest : BaseEspressoTest() {
             )
         )
         addNoteButtonAction.perform(longClick())
+        addNoteButtonAction.perform(doubleClick())
+        pressBack()
         addNoteButtonAction.perform(click())
 
         closeSoftKeyboard()

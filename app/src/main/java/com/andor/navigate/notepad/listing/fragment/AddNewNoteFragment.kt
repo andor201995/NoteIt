@@ -14,10 +14,7 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment.findNavController
 import com.andor.navigate.notepad.R
-import com.andor.navigate.notepad.core.AlertEvent
-import com.andor.navigate.notepad.core.EventOnFragment
-import com.andor.navigate.notepad.core.NoteViewModel
-import com.andor.navigate.notepad.core.Utils
+import com.andor.navigate.notepad.core.*
 import com.andor.navigate.notepad.listing.dao.NoteModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -79,7 +76,10 @@ class AddNewNoteFragment : BottomSheetDialogFragment() {
 
     private fun handleEvent(event: EventOnFragment?) {
         when (event) {
-            is EventOnFragment.AddNoteEvent.AddNote -> findNavController(this).navigate(R.id.action_addNewNoteFragment_to_updateNoteFragment)
+            is EventOnFragment.AddNoteEvent.AddNote -> findNavController(this).navigateSafe(
+                R.id.addNewNoteFragment,
+                R.id.action_addNewNoteFragment_to_updateNoteFragment
+            )
             is EventOnFragment.AddNoteEvent.UpdateNote -> findNavController(this).navigateUp()
             is EventOnFragment.AddNoteEvent.Cancel -> findNavController(this).navigateUp()
         }
