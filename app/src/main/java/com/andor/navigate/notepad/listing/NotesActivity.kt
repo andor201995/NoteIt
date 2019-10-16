@@ -4,7 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
@@ -39,7 +39,10 @@ class NotesActivity : AppCompatActivity() {
         )
 
         viewModel =
-            ViewModelProviders.of(this, NoteViewModelFactory(application!!, uid = intent!!.getStringExtra("uid")!!))
+            ViewModelProvider(
+                this,
+                NoteViewModelFactory(application!!, uid = intent!!.getStringExtra("uid")!!)
+            )
                 .get(NoteViewModel::class.java)
     }
 
