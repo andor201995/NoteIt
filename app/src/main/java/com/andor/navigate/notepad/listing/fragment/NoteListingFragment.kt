@@ -100,11 +100,11 @@ class NoteListingFragment : Fragment() {
             searchView.apply {
                 // Assumes current activity is the searchable activity
                 setSearchableInfo(searchManager.getSearchableInfo(activity!!.componentName))
-                setIconifiedByDefault(true) // Do not iconify the widget; expand it by default
-                setOnSearchClickListener {
-                    menu.findItem(R.id.action_setting).isVisible = false
-                    menu.findItem(R.id.action_add).isVisible = false
-                }
+//                setIconifiedByDefault(true) // Do not iconify the widget; expand it by default
+//                setOnSearchClickListener {
+//                    menu.findItem(R.id.action_setting).isVisible = false
+//                    menu.findItem(R.id.action_add).isVisible = false
+//                }
             }
         }
     }
