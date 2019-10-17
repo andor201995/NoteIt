@@ -1,5 +1,6 @@
 package com.andor.navigate.notepad.listing
 
+import android.app.SearchManager
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -38,9 +39,19 @@ class NotesActivity : AppCompatActivity() {
             appBarConfiguration
         )
 
+        // Verify the action and get the query
+        if (Intent.ACTION_SEARCH == intent.action) {
+            intent.getStringExtra(SearchManager.QUERY)?.also { query ->
+                doMySearch(query)
+            }
+        }
         viewModel =
             ViewModelProviders.of(this, NoteViewModelFactory(application!!, uid = intent!!.getStringExtra("uid")!!))
                 .get(NoteViewModel::class.java)
+    }
+
+    private fun doMySearch(query: String) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override fun onSupportNavigateUp(): Boolean = findNavController(nav_host).navigateUp()

@@ -1,10 +1,12 @@
 package com.andor.navigate.notepad.listing.fragment
 
 
+import android.app.SearchManager
 import android.content.Context
 import android.os.Bundle
 import android.view.*
 import android.view.inputmethod.InputMethodManager
+import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -93,6 +95,17 @@ class NoteListingFragment : Fragment() {
             }
         } else {
             inflater.inflate(R.menu.menu_main, menu)
+            val searchManager = activity!!.getSystemService(Context.SEARCH_SERVICE) as SearchManager
+            val searchView = menu.findItem(R.id.action_search).actionView as SearchView
+            searchView.apply {
+                // Assumes current activity is the searchable activity
+                setSearchableInfo(searchManager.getSearchableInfo(activity!!.componentName))
+                setIconifiedByDefault(true) // Do not iconify the widget; expand it by default
+                setOnSearchClickListener {
+                    menu.findItem(R.id.action_setting).isVisible = false
+                    menu.findItem(R.id.action_add).isVisible = false
+                }
+            }
         }
     }
 
@@ -176,22 +189,27 @@ class NoteListingFragment : Fragment() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == R.id.SelectedItemDelete) {
-            viewModel.delete(HashSet(selectedNotes))
-            longPressActionMode?.finish()
-        }
-        if (item.itemId == R.id.action_setting) {
-            findNavController(this).navigateSafe(
-                R.id.noteListingFragment,
-                R.id.action_noteListingFragment_to_settingFragment
-            )
-        }
-        if (item.itemId == R.id.action_add) {
-            viewModel.updateSelectedNotes(NoteModel())
-            findNavController(this).navigateSafe(
-                R.id.noteListingFragment,
-                R.id.action_noteListingFragment_to_addNewNoteFragment
-            )
+        when (item.itemId) {
+            R.id.SelectedItemDelete -> {
+                viewModel.delete(HashSet(selectedNotes))
+                longPressActionMode?.finish()
+            }
+            R.id.action_setting -> {
+                findNavController(this).navigateSafe(
+                    R.id.noteListingFragment,
+                    R.id.action_noteListingFragment_to_settingFragment
+                )
+            }
+            R.id.action_add -> {
+                viewModel.updateSelectedNotes(NoteModel())
+                findNavController(this).navigateSafe(
+                    R.id.noteListingFragment,
+                    R.id.action_noteListingFragment_to_addNewNoteFragment
+                )
+            }
+//            R.id.action_search -> {
+//                activity!!.invalidateOptionsMenu()
+//            }
         }
         return super.onOptionsItemSelected(item)
     }
