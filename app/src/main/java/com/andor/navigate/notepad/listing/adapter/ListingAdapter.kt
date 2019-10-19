@@ -4,6 +4,8 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Filter
+import android.widget.Filterable
 import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -17,10 +19,40 @@ class ListingAdapter(
     private val noteList: List<NoteModel>,
     val fragCallback: (ListItemEvent) -> Unit
 
-) : RecyclerView.Adapter<ListingAdapter.ListingHolder>() {
+) : RecyclerView.Adapter<ListingAdapter.ListingHolder>(), Filterable {
 
-    init {
-//        setHasStableIds(true)
+    private val noteFilterFullList = ArrayList<NoteModel>(noteList)
+
+    private val filter = object : Filter() {
+        override fun performFiltering(constraint: CharSequence?): FilterResults {
+            val filterList = ArrayList<NoteModel>()
+            if (constraint == null || constraint.isEmpty()) {
+                filterList.addAll(noteFilterFullList)
+            } else {
+                val filterPattern = constraint.toString().toLowerCase().trim()
+
+                for (note in noteFilterFullList) {
+                    if (note.head.toLowerCase().contains(filterPattern) ||
+                        note.body.toLowerCase().contains(filterPattern)
+                    ) {
+                        filterList.add(note)
+                    }
+                }
+
+            }
+            val filterResults = FilterResults()
+            filterResults.values = filterList
+            return filterResults
+        }
+
+        override fun publishResults(constraint: CharSequence?, filterResults: FilterResults?) {
+            if (filterResults != null) {
+                (noteList as ArrayList).clear()
+                noteList.addAll(filterResults.values as List<NoteModel>)
+                notifyDataSetChanged()
+            }
+        }
+
     }
 
     override fun getItemCount(): Int {
@@ -42,10 +74,6 @@ class ListingAdapter(
 
     }
 
-    override fun getItemId(position: Int): Long {
-        return super.getItemId(position)
-    }
-
     override fun getItemViewType(position: Int): Int {
         return position
     }
@@ -54,11 +82,18 @@ class ListingAdapter(
         val diffResult = DiffUtil.calculateDiff(MyDiffCallback(this.noteList, newNoteList))
         (noteList as ArrayList).clear()
         noteList.addAll(newNoteList)
+        noteFilterFullList.clear()
+        noteFilterFullList.addAll(newNoteList)
         diffResult.dispatchUpdatesTo(this)
+    }
+
+    override fun getFilter(): Filter {
+        return filter
     }
 
     inner class ListingHolder(view: View) : RecyclerView.ViewHolder(view), View.OnClickListener,
         View.OnLongClickListener {
+
         val headTxtView: TextView = view.findViewById(R.id.noteHeadTxtView)
         val bodyTxtView: TextView = view.findViewById(R.id.noteBodyTxtView)
         val selectedItemView: View = view.findViewById(R.id.selectedItemView)
@@ -85,7 +120,10 @@ class ListingAdapter(
             val noteModel = noteList[adapterPosition]
             fragCallback.invoke(ListItemEvent.SingleClickEvent(noteModel))
         }
+
     }
+
+
 }
 
 class MyDiffCallback(
@@ -93,6 +131,7 @@ class MyDiffCallback(
     private val newNoteList: List<NoteModel>
 ) :
     DiffUtil.Callback() {
+
     override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
         return oldNoteList[oldItemPosition].id == newNoteList[newItemPosition].id
     }
@@ -109,9 +148,6 @@ class MyDiffCallback(
         return oldNoteList[oldItemPosition] == newNoteList[newItemPosition]
     }
 
-    override fun getChangePayload(oldItemPosition: Int, newItemPosition: Int): Any? {
-        return super.getChangePayload(oldItemPosition, newItemPosition)
-    }
 }
 
 sealed class ListItemEvent {

@@ -51,7 +51,6 @@ class NotesActivity : AppCompatActivity() {
     }
 
     private fun doMySearch(query: String) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override fun onSupportNavigateUp(): Boolean = findNavController(nav_host).navigateUp()

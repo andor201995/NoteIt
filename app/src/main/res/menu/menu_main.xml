@@ -15,6 +15,6 @@
         android:icon="@drawable/ic_search_24px"
         android:title="@string/search_hint"
         app:actionViewClass="androidx.appcompat.widget.SearchView"
-        app:showAsAction="always" />
+        app:showAsAction="always|collapseActionView" />
 
 </menu>

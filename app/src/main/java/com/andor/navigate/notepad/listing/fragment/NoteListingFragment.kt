@@ -34,6 +34,7 @@ class NoteListingFragment : Fragment() {
     private val selectedNotes: HashSet<NoteModel> = HashSet()
     private lateinit var viewModel: NoteViewModel
     private val gridSize = 2
+    private lateinit var listingAdapter: ListingAdapter
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -86,7 +87,7 @@ class NoteListingFragment : Fragment() {
                     selectedNotes.clear()
                     isLongPressed = false
                     activity?.invalidateOptionsMenu()
-                    listRecyclerView.adapter?.notifyDataSetChanged()
+                    this@NoteListingFragment.listingAdapter.notifyDataSetChanged()
                 }
 
             }
@@ -95,17 +96,46 @@ class NoteListingFragment : Fragment() {
             }
         } else {
             inflater.inflate(R.menu.menu_main, menu)
-            val searchManager = activity!!.getSystemService(Context.SEARCH_SERVICE) as SearchManager
-            val searchView = menu.findItem(R.id.action_search).actionView as SearchView
+            val searchManager = activity!!.getSystemService(Context.SEARCH_SERVICE)
+            val searchActionMenuItem = menu.findItem(R.id.action_search)
+            val settingActionMenuItem = menu.findItem(R.id.action_setting)
+            val addActionMenuItem = menu.findItem(R.id.action_add)
+
+            if (searchActionMenuItem is MenuItem) {
+                searchActionMenuItem.setOnActionExpandListener(object :
+                    MenuItem.OnActionExpandListener {
+                    override fun onMenuItemActionExpand(p0: MenuItem?): Boolean {
+                        settingActionMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)
+                        addActionMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)
+                        return true
+                    }
+
+                    override fun onMenuItemActionCollapse(p0: MenuItem?): Boolean {
+                        activity?.invalidateOptionsMenu()
+                        return true
+                    }
+                })
+            }
+            val searchView = searchActionMenuItem.actionView as SearchView
             searchView.apply {
                 // Assumes current activity is the searchable activity
-                setSearchableInfo(searchManager.getSearchableInfo(activity!!.componentName))
-//                setIconifiedByDefault(true) // Do not iconify the widget; expand it by default
-//                setOnSearchClickListener {
-//                    menu.findItem(R.id.action_setting).isVisible = false
-//                    menu.findItem(R.id.action_add).isVisible = false
-//                }
+                if (searchManager is SearchManager) {
+                    setSearchableInfo(searchManager.getSearchableInfo(activity!!.componentName))
+                }
+                setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+                    override fun onQueryTextSubmit(query: String?): Boolean {
+                        return true
+                    }
+
+                    override fun onQueryTextChange(newText: String?): Boolean {
+                        this@NoteListingFragment.listingAdapter.filter.filter(newText)
+                        return true
+                    }
+
+                })
+
             }
+
         }
     }
 
@@ -133,12 +163,14 @@ class NoteListingFragment : Fragment() {
             }
             setRecyclerViewManager(appState)
             listRecyclerView.adapter = listingAdapter
+            this.listingAdapter = listingAdapter
 
         } else {
             if (::oldAppState.isInitialized && appState.listingType != oldAppState.listingType) {
                 setRecyclerViewManager(appState)
             }
-            (listRecyclerView.adapter as ListingAdapter).updateRecyclerView(noteList)
+            this.listingAdapter = (listRecyclerView.adapter as ListingAdapter)
+            this.listingAdapter.updateRecyclerView(noteList)
         }
     }
 
@@ -195,6 +227,7 @@ class NoteListingFragment : Fragment() {
                 longPressActionMode?.finish()
             }
             R.id.action_setting -> {
+                activity?.invalidateOptionsMenu()
                 findNavController(this).navigateSafe(
                     R.id.noteListingFragment,
                     R.id.action_noteListingFragment_to_settingFragment
@@ -202,14 +235,12 @@ class NoteListingFragment : Fragment() {
             }
             R.id.action_add -> {
                 viewModel.updateSelectedNotes(NoteModel())
+                activity?.invalidateOptionsMenu()
                 findNavController(this).navigateSafe(
                     R.id.noteListingFragment,
                     R.id.action_noteListingFragment_to_addNewNoteFragment
                 )
             }
-//            R.id.action_search -> {
-//                activity!!.invalidateOptionsMenu()
-//            }
         }
         return super.onOptionsItemSelected(item)
     }
