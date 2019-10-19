@@ -4,10 +4,17 @@
         android:id="@+id/action_add"
         android:icon="@drawable/ic_baseline_note_add_24px"
         android:title="@string/add_note"
-        app:showAsAction="always" />
+        app:showAsAction="ifRoom" />
     <item
         android:id="@+id/action_setting"
         android:icon="@drawable/ic_icons_settings"
         android:title="@string/action_settings"
         app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_search"
+        android:icon="@drawable/ic_search_24px"
+        android:title="@string/search_hint"
+        app:actionViewClass="androidx.appcompat.widget.SearchView"
+        app:showAsAction="always|collapseActionView" />
+
 </menu>
