@@ -21,6 +21,10 @@ class ListingAdapter(
 
 ) : RecyclerView.Adapter<ListingAdapter.ListingHolder>(), Filterable {
 
+    init {
+        sortList(noteList)
+    }
+
     private val noteFilterFullList = ArrayList<NoteModel>(noteList)
 
     private val filter = object : Filter() {
@@ -40,6 +44,7 @@ class ListingAdapter(
                 }
 
             }
+            sortList(filterList)
             val filterResults = FilterResults()
             filterResults.values = filterList
             return filterResults
@@ -79,12 +84,20 @@ class ListingAdapter(
     }
 
     fun updateRecyclerView(newNoteList: List<NoteModel>) {
+        sortList(noteList)
+        sortList(newNoteList)
         val diffResult = DiffUtil.calculateDiff(MyDiffCallback(this.noteList, newNoteList))
         (noteList as ArrayList).clear()
         noteList.addAll(newNoteList)
         noteFilterFullList.clear()
         noteFilterFullList.addAll(newNoteList)
         diffResult.dispatchUpdatesTo(this)
+    }
+
+    private fun sortList(noteList: List<NoteModel>) {
+        val tempList = noteList.sortedBy { it.head }
+        (noteList as ArrayList).clear()
+        noteList.addAll(tempList)
     }
 
     override fun getFilter(): Filter {
