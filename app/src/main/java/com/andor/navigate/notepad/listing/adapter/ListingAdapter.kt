@@ -10,6 +10,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.andor.navigate.notepad.R
+import com.andor.navigate.notepad.core.SortingType
 import com.andor.navigate.notepad.core.Utils
 import com.andor.navigate.notepad.listing.dao.NoteModel
 
@@ -20,6 +21,8 @@ class ListingAdapter(
     val fragCallback: (ListItemEvent) -> Unit
 
 ) : RecyclerView.Adapter<ListingAdapter.ListingHolder>(), Filterable {
+
+    private var sortingType: SortingType = SortingType.Alphabet  //default sorting
 
     init {
         sortList(noteList)
@@ -95,13 +98,22 @@ class ListingAdapter(
     }
 
     private fun sortList(noteList: List<NoteModel>) {
-        val tempList = noteList.sortedBy { it.head }
+        val tempList = when (sortingType) {
+            is SortingType.Alphabet -> noteList.sortedBy { it.head }
+            is SortingType.DateUpdated -> noteList.sortedBy { it.head }  //TODO: sort by updateDate
+            is SortingType.DateCreated -> noteList.sortedBy { it.head }  //TODO: sort by createDate
+        }
         (noteList as ArrayList).clear()
         noteList.addAll(tempList)
     }
 
     override fun getFilter(): Filter {
         return filter
+    }
+
+    fun updateSortingType(sortingType: SortingType) {
+        this.sortingType = sortingType
+        notifyDataSetChanged()
     }
 
     inner class ListingHolder(view: View) : RecyclerView.ViewHolder(view), View.OnClickListener,

@@ -84,13 +84,14 @@ class NoteViewModel(application: Application, uid: String, db: FirebaseFirestore
         appStateRelay.value = appStateRelay.value!!.copy(selectedNote = noteModel)
     }
 
+    fun changeSortingType(sortingType: SortingType) {
+        appStateRelay.value = appStateRelay.value!!.copy(sortingType = sortingType)
+    }
+
+
     fun getAppStateStream(): LiveData<AppState> = appStateRelay
-
     fun getAppEventStream(): LiveData<Event<EventOnFragment>> = appEventRelay
-
     fun getAppAlertStream(): LiveData<Event<AlertEvent>> = appAlertRelay
-
-
 }
 
 
