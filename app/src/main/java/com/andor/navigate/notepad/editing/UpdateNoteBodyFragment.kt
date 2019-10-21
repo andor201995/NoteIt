@@ -47,7 +47,13 @@ class UpdateNoteBodyFragment : Fragment() {
                 private var timer = Timer()
                 private val DELAY: Long = 1000 // milliseconds
                 override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
-                override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
+                override fun beforeTextChanged(
+                    s: CharSequence,
+                    start: Int,
+                    count: Int,
+                    after: Int
+                ) {
+                }
 
                 override fun afterTextChanged(s: Editable) {
                     timer.cancel()
@@ -68,7 +74,8 @@ class UpdateNoteBodyFragment : Fragment() {
 
     private fun updateNoteModel(s: Editable) {
         val value = viewModel.getAppStateStream().value!!
-        val newNoteModel = value.selectedNote!!.copy(body = s.toString())
+        val newNoteModel =
+            value.selectedNote!!.copy(body = s.toString(), dateUpdated = System.currentTimeMillis())
         viewModel.insert(newNoteModel)
     }
 

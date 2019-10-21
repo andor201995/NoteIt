@@ -155,7 +155,7 @@ class NoteListingFragment : Fragment() {
     ) {
         val noteList = appState.listOfAllNotes
         if (listRecyclerView.adapter == null) {
-            val listingAdapter = ListingAdapter(context!!, noteList) {
+            val listingAdapter = ListingAdapter(context!!, noteList, appState.sortingType) {
                 setRecyclerViewEventListener(it)
             }
             listRecyclerView.adapter = listingAdapter
