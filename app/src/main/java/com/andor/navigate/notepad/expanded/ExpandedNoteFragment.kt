@@ -6,7 +6,7 @@ import android.text.method.ScrollingMovementMethod
 import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment.findNavController
 import com.andor.navigate.notepad.R
 import com.andor.navigate.notepad.core.AppState
@@ -25,7 +25,7 @@ class ExpandedNoteFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        viewModel = ViewModelProviders.of(activity!!).get(NoteViewModel::class.java)
+        viewModel = ViewModelProvider(activity!!).get(NoteViewModel::class.java)
 
         expandedNoteTxt.movementMethod = ScrollingMovementMethod()
         setDoubleTapListener()
