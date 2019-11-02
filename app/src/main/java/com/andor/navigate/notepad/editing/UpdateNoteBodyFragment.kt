@@ -11,6 +11,7 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.andor.navigate.notepad.R
+import com.andor.navigate.notepad.core.EventOnFragment
 import com.andor.navigate.notepad.core.NoteViewModel
 import com.andor.navigate.notepad.core.Utils
 import com.andor.navigate.notepad.listing.NotesActivity
@@ -61,7 +62,11 @@ class UpdateNoteBodyFragment : Fragment() {
                     timer.schedule(
                         object : TimerTask() {
                             override fun run() {
-                                updateNoteModel(s)
+                                viewModel.handleFragmentEvent(
+                                    EventOnFragment.UpdateNoteEvent.TextChanged(
+                                        s.toString()
+                                    )
+                                )
                             }
                         },
                         DELAY
@@ -70,12 +75,6 @@ class UpdateNoteBodyFragment : Fragment() {
             }
         )
 
-    }
-
-    private fun updateNoteModel(s: Editable) {
-        val value = viewModel.getAppStateStream().value!!
-        val newNoteModel = value.selectedNote!!.copy(body = s.toString())
-        viewModel.insert(newNoteModel)
     }
 
     override fun onCreateView(
@@ -87,7 +86,7 @@ class UpdateNoteBodyFragment : Fragment() {
     }
 
     override fun onStop() {
-        updateNoteModel(newNoteBodyTxt.editableText)
+        viewModel.handleFragmentEvent(EventOnFragment.UpdateNoteEvent.FragmentStop(newNoteBodyTxt.editableText.toString()))
         super.onStop()
     }
 }

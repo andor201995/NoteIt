@@ -13,14 +13,13 @@ class ViewModelTest : BaseUnitTest() {
 
     @Before
     fun setUpStreams() {
-        noteViewModel.actionAddNote(EventOnFragment.AddNoteEvent.AddNote(NoteModel()))
-        noteViewModel.actionAddNote(EventOnFragment.AddNoteEvent.AddNote(NoteModel(head = "")))
-
+        noteViewModel.handleFragmentEvent(EventOnFragment.AddNoteEvent.AddNote(NoteModel()))
+        noteViewModel.handleFragmentEvent(EventOnFragment.AddNoteEvent.AddNote(NoteModel(head = "")))
     }
 
     @Test
     fun addingNoteWithEmptyTitle() {
-        noteViewModel.actionAddNote(
+        noteViewModel.handleFragmentEvent(
             EventOnFragment.AddNoteEvent.AddNote(NoteModel(head = ""))
         )
         noteViewModel.getAppEventStream().observeOnce { event ->
@@ -36,7 +35,7 @@ class ViewModelTest : BaseUnitTest() {
 
     @Test
     fun updateNoteWithEmptyTitle() {
-        noteViewModel.actionAddNote(
+        noteViewModel.handleFragmentEvent(
             EventOnFragment.AddNoteEvent.UpdateNote(NoteModel(head = ""))
         )
         noteViewModel.getAppEventStream().observeOnce { event ->

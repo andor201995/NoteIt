@@ -9,10 +9,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment.findNavController
 import com.andor.navigate.notepad.R
-import com.andor.navigate.notepad.core.AppState
-import com.andor.navigate.notepad.core.NoteViewModel
-import com.andor.navigate.notepad.core.Utils
-import com.andor.navigate.notepad.core.navigateSafe
+import com.andor.navigate.notepad.core.*
 import com.andor.navigate.notepad.listing.NotesActivity
 import kotlinx.android.synthetic.main.fragment_expanded_note.*
 
@@ -39,13 +36,22 @@ class ExpandedNoteFragment : Fragment() {
             }
             oldAppState = appState
         })
+
+        viewModel.getAppEventStream().observe(viewLifecycleOwner, Observer { event ->
+            when (event.getContentIfNotHandled()) {
+                EventOnFragment.ExpandedNoteEvent.OpenUpdateNoteFragment -> operEditor()
+                EventOnFragment.ExpandedNoteEvent.OpenEditNoteBottomSheet -> openBottomMenu()
+            }
+
+        })
     }
 
     private fun setDoubleTapListener() {
         val gestureDetector =
             GestureDetector(context, object : GestureDetector.SimpleOnGestureListener() {
                 override fun onDoubleTap(e: MotionEvent): Boolean {
-                    operEditor()
+                    //throw event to view Model
+                    viewModel.handleFragmentEvent(EventOnFragment.ExpandedNoteEvent.OpenUpdateNoteFragment)
                     return true
                 }
             })
@@ -70,12 +76,13 @@ class ExpandedNoteFragment : Fragment() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.edit) {
-            setBottomMenu()
+            //throw event to viewModel
+            viewModel.handleFragmentEvent(EventOnFragment.ExpandedNoteEvent.OpenEditNoteBottomSheet)
         }
         return super.onOptionsItemSelected(item)
     }
 
-    private fun setBottomMenu() {
+    private fun openBottomMenu() {
         findNavController(this).navigateSafe(
             R.id.expandedNoteFragment,
             R.id.action_expandedNoteFragment_to_addNewNoteFragment
