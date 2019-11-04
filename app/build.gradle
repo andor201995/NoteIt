@@ -83,10 +83,10 @@ dependencies {
     api "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines"
     implementation 'com.google.android.gms:play-services-auth:17.0.0'
     // Fire-Base
-    implementation 'com.google.firebase:firebase-core:17.2.0'
+    implementation 'com.google.firebase:firebase-core:17.2.1'
     implementation 'com.google.firebase:firebase-auth:19.1.0'
     implementation 'com.google.firebase:firebase-storage:19.1.0'
-    implementation 'com.google.firebase:firebase-firestore:21.1.1'
+    implementation 'com.google.firebase:firebase-firestore:21.2.1'
     //ktx android
     implementation 'androidx.core:core-ktx:1.1.0'
     implementation 'androidx.fragment:fragment-ktx:1.2.0-beta02'
