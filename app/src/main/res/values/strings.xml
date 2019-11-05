@@ -29,4 +29,12 @@
     <string name="logout_no">No</string>
     <string name="empty_title_toast">Title is empty</string>
     <string name="search_hint">Search note</string>
+    <string name="linear_list">linear list</string>
+    <string name="grid_list">grid list</string>
+    <string name="staggered_list">staggered list</string>
+    <string name="sorting_type">Sorting Type</string>
+    <string name="sort_by_alphabet">sort by alphabet</string>
+    <string name="sort_by_last_updated">sort by last updated</string>
+    <string name="sort_by_created_date">sort by created date</string>
+    <string name="date">date</string>
 </resources>

@@ -9,6 +9,10 @@ data class NoteModel(
 
     val bg: String = NOTE_BG0,
 
+    val dateCreated: Long = System.currentTimeMillis(),
+
+    val dateUpdated: Long = System.currentTimeMillis(),
+
     @set:Exclude
     @get:Exclude
     var id: String = DEFAULT_ID
@@ -26,7 +30,7 @@ data class NoteModel(
         const val NOTE_BG5 = "BG5"
     }
 
-    constructor() : this("", "", "", "")
+    constructor() : this("", "", "", 0, 0, "")
 
 
 }

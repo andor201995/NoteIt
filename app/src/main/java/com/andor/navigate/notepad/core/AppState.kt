@@ -6,7 +6,8 @@ data class AppState(
     val selectedNote: NoteModel? = null,
     val listingType: ListingType = ListingType.Linear,
     val listOfAllNotes: ArrayList<NoteModel> = ArrayList(),
-    val currentUserID: String
+    val currentUserID: String,
+    val sortingType: SortingType = SortingType.Alphabet
 )
 
 
@@ -14,6 +15,12 @@ sealed class ListingType {
     object Linear : ListingType()
     object Grid : ListingType()
     object Staggered : ListingType()
+}
+
+sealed class SortingType {
+    object Alphabet : SortingType()
+    object DateCreated : SortingType()
+    object DateUpdated : SortingType()
 }
 
 sealed class EventOnFragment {

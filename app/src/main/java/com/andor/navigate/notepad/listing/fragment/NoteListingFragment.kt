@@ -16,10 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.andor.navigate.notepad.R
-import com.andor.navigate.notepad.core.AppState
-import com.andor.navigate.notepad.core.ListingType
-import com.andor.navigate.notepad.core.NoteViewModel
-import com.andor.navigate.notepad.core.navigateSafe
+import com.andor.navigate.notepad.core.*
 import com.andor.navigate.notepad.listing.NotesActivity
 import com.andor.navigate.notepad.listing.adapter.ListItemEvent
 import com.andor.navigate.notepad.listing.adapter.ListingAdapter
@@ -158,20 +155,32 @@ class NoteListingFragment : Fragment() {
     ) {
         val noteList = appState.listOfAllNotes
         if (listRecyclerView.adapter == null) {
-            val listingAdapter = ListingAdapter(context!!, noteList) {
+            val listingAdapter = ListingAdapter(context!!, noteList, appState.sortingType) {
                 setRecyclerViewEventListener(it)
             }
-            setRecyclerViewManager(appState)
             listRecyclerView.adapter = listingAdapter
             this.listingAdapter = listingAdapter
 
+            setRecyclerViewManager(appState)
+            setRecyclerViewSortingType(appState.sortingType)
+
         } else {
+            //set Sorting before Updating List
+            if (::oldAppState.isInitialized && appState.sortingType != oldAppState.sortingType) {
+                setRecyclerViewSortingType(appState.sortingType)
+            }
+            //set List Type
             if (::oldAppState.isInitialized && appState.listingType != oldAppState.listingType) {
                 setRecyclerViewManager(appState)
             }
+
             this.listingAdapter = (listRecyclerView.adapter as ListingAdapter)
             this.listingAdapter.updateRecyclerView(noteList)
         }
+    }
+
+    private fun setRecyclerViewSortingType(sortingType: SortingType) {
+        listingAdapter.updateSortingType(sortingType)
     }
 
     private fun setRecyclerViewEventListener(it: ListItemEvent) {

@@ -2,9 +2,9 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/settingFragmentContainer"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:id="@+id/settingFragmentContainer"
     android:minHeight="300dp"
     tools:context=".listing.fragment.SettingFragment">
 
@@ -43,6 +43,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="@color/transparent"
+            android:contentDescription="@string/linear_list"
             android:scaleType="fitCenter"
             android:src="@drawable/ic_baseline_view_list_24px" />
 
@@ -52,6 +53,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="@color/transparent"
+            android:contentDescription="@string/grid_list"
             android:scaleType="fitCenter"
             android:src="@drawable/ic_baseline_view_module_24px" />
 
@@ -61,8 +63,67 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="@color/transparent"
+            android:contentDescription="@string/staggered_list"
             android:scaleType="fitCenter"
             android:src="@drawable/ic_baseline_view_quilt_24px" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/sort_textView"
+        android:layout_width="match_parent"
+        android:layout_height="43dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginBottom="8dp"
+        android:gravity="center_horizontal"
+        android:text="@string/sorting_type"
+        android:textSize="@dimen/setting_page_Heading"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/listTypeLayout" />
+
+    <LinearLayout
+        android:id="@+id/sortTypeLayout"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="8dp"
+        android:weightSum="3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/sort_textView">
+
+        <ImageButton
+            android:id="@+id/sortByAlphabet"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@color/transparent"
+            android:contentDescription="@string/sort_by_alphabet"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_sort_by_alpha_black_24dp" />
+
+        <ImageButton
+            android:id="@+id/sortByRecentChange"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@color/transparent"
+            android:contentDescription="@string/sort_by_last_updated"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_timelapse_black_24dp" />
+
+        <ImageButton
+            android:id="@+id/sortByCreated"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@color/transparent"
+            android:contentDescription="@string/sort_by_created_date"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_create_new_folder_black_24dp" />
+
     </LinearLayout>
 
     <TextView
@@ -78,7 +139,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/listTypeLayout"
+        app:layout_constraintTop_toBottomOf="@+id/sortTypeLayout"
         app:layout_constraintVertical_bias="0.0" />
 
     <ImageButton
@@ -89,6 +150,7 @@
         android:layout_marginTop="16dp"
         android:layout_weight="1"
         android:background="@color/transparent"
+        android:contentDescription="@string/logout"
         android:scaleType="fitCenter"
         android:src="@android:drawable/ic_lock_power_off"
         app:layout_constraintBottom_toBottomOf="parent"
