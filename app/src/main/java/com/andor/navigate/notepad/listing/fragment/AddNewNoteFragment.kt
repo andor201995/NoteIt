@@ -90,7 +90,8 @@ class AddNewNoteFragment : BottomSheetDialogFragment() {
             val noteModel = NoteModel(
                 id = UUID.randomUUID().toString(),
                 head = newNoteHeadText.text.toString(),
-                bg = selectedBGType
+                bg = selectedBGType,
+                dateCreated = System.currentTimeMillis()
             )
             viewModel.actionAddNote(EventOnFragment.AddNoteEvent.AddNote(noteModel))
 
@@ -104,7 +105,9 @@ class AddNewNoteFragment : BottomSheetDialogFragment() {
             viewModel.actionAddNote(
                 EventOnFragment.AddNoteEvent.UpdateNote(
                     noteModel.copy(
-                        head = newNoteHeadText.text.toString(), bg = selectedBGType
+                        head = newNoteHeadText.text.toString(),
+                        bg = selectedBGType,
+                        dateUpdated = System.currentTimeMillis()
                     )
                 )
             )

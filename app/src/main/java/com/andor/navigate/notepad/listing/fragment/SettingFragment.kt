@@ -14,6 +14,7 @@ import androidx.navigation.fragment.NavHostFragment.findNavController
 import com.andor.navigate.notepad.R
 import com.andor.navigate.notepad.core.ListingType
 import com.andor.navigate.notepad.core.NoteViewModel
+import com.andor.navigate.notepad.core.SortingType
 import com.andor.navigate.notepad.core.navigateSafe
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -52,6 +53,20 @@ class SettingFragment : BottomSheetDialogFragment() {
                         ContextCompat.getDrawable(context!!, R.drawable.backgound_button_select)
                 }
             }
+            when (it.sortingType) {
+                is SortingType.DateCreated -> {
+                    sortByCreated.background =
+                        ContextCompat.getDrawable(context!!, R.drawable.backgound_button_select)
+                }
+                is SortingType.DateUpdated -> {
+                    sortByRecentChange.background =
+                        ContextCompat.getDrawable(context!!, R.drawable.backgound_button_select)
+                }
+                is SortingType.Alphabet -> {
+                    sortByAlphabet.background =
+                        ContextCompat.getDrawable(context!!, R.drawable.backgound_button_select)
+                }
+            }
         }
         setUpOnClickListType()
         logout_btn.setOnClickListener {
@@ -65,22 +80,44 @@ class SettingFragment : BottomSheetDialogFragment() {
     private fun setUpOnClickListType() {
         setting_view_type_linear.setOnClickListener {
             viewModel.changeListTypeTo(ListingType.Linear)
-            clearButtonBackGround()
+            clearListButtonBackGround()
             it.background = ContextCompat.getDrawable(context!!, R.drawable.backgound_button_select)
         }
         setting_view_type_grid.setOnClickListener {
             viewModel.changeListTypeTo(ListingType.Grid)
-            clearButtonBackGround()
+            clearListButtonBackGround()
             it.background = ContextCompat.getDrawable(context!!, R.drawable.backgound_button_select)
         }
         setting_view_type_staggered.setOnClickListener {
             viewModel.changeListTypeTo(ListingType.Staggered)
-            clearButtonBackGround()
+            clearListButtonBackGround()
             it.background = ContextCompat.getDrawable(context!!, R.drawable.backgound_button_select)
         }
+        sortByAlphabet.setOnClickListener {
+            viewModel.changeSortingType(SortingType.Alphabet)
+            clearSortButtonBackGround()
+            it.background = ContextCompat.getDrawable(context!!, R.drawable.backgound_button_select)
+        }
+        sortByRecentChange.setOnClickListener {
+            viewModel.changeSortingType(SortingType.DateUpdated)
+            clearSortButtonBackGround()
+            it.background = ContextCompat.getDrawable(context!!, R.drawable.backgound_button_select)
+        }
+        sortByCreated.setOnClickListener {
+            viewModel.changeSortingType(SortingType.DateCreated)
+            clearSortButtonBackGround()
+            it.background = ContextCompat.getDrawable(context!!, R.drawable.backgound_button_select)
+        }
+
     }
 
-    private fun clearButtonBackGround() {
+    private fun clearSortButtonBackGround() {
+        sortByCreated.setBackgroundColor(Color.TRANSPARENT)
+        sortByRecentChange.setBackgroundColor(Color.TRANSPARENT)
+        sortByAlphabet.setBackgroundColor(Color.TRANSPARENT)
+    }
+
+    private fun clearListButtonBackGround() {
         setting_view_type_linear.setBackgroundColor(Color.TRANSPARENT)
         setting_view_type_grid.setBackgroundColor(Color.TRANSPARENT)
         setting_view_type_staggered.setBackgroundColor(Color.TRANSPARENT)

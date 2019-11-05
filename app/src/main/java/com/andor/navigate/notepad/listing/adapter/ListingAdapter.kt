@@ -10,16 +10,25 @@ import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.andor.navigate.notepad.R
+import com.andor.navigate.notepad.core.SortingType
 import com.andor.navigate.notepad.core.Utils
 import com.andor.navigate.notepad.listing.dao.NoteModel
+import java.text.DateFormat
+import java.util.*
+import kotlin.collections.ArrayList
 
 
 class ListingAdapter(
     private val context: Context,
     private val noteList: List<NoteModel>,
+    private var sortingType: SortingType,
     val fragCallback: (ListItemEvent) -> Unit
 
 ) : RecyclerView.Adapter<ListingAdapter.ListingHolder>(), Filterable {
+
+    init {
+        sortList(noteList)
+    }
 
     private val noteFilterFullList = ArrayList<NoteModel>(noteList)
 
@@ -40,6 +49,7 @@ class ListingAdapter(
                 }
 
             }
+            sortList(filterList)
             val filterResults = FilterResults()
             filterResults.values = filterList
             return filterResults
@@ -69,6 +79,8 @@ class ListingAdapter(
         val currentNoteModal = noteList[position]
         holder.headTxtView.text = currentNoteModal.head
         holder.bodyTxtView.text = currentNoteModal.body
+        holder.dateCreatedTxtView.text =
+            DateFormat.getDateInstance().format(Date(currentNoteModal.dateCreated))
         holder.container.background = Utils.getBackGroundRes(context, currentNoteModal.bg)
         holder.selectedItemView.inVisible()
 
@@ -79,6 +91,8 @@ class ListingAdapter(
     }
 
     fun updateRecyclerView(newNoteList: List<NoteModel>) {
+        sortList(noteList)
+        sortList(newNoteList)
         val diffResult = DiffUtil.calculateDiff(MyDiffCallback(this.noteList, newNoteList))
         (noteList as ArrayList).clear()
         noteList.addAll(newNoteList)
@@ -87,8 +101,23 @@ class ListingAdapter(
         diffResult.dispatchUpdatesTo(this)
     }
 
+    private fun sortList(noteList: List<NoteModel>) {
+        val tempList = when (sortingType) {
+            is SortingType.Alphabet -> noteList.sortedBy { it.head }
+            is SortingType.DateUpdated -> noteList.sortedBy { -it.dateUpdated }
+            is SortingType.DateCreated -> noteList.sortedBy { -it.dateCreated }
+        }
+        (noteList as ArrayList).clear()
+        noteList.addAll(tempList)
+    }
+
     override fun getFilter(): Filter {
         return filter
+    }
+
+    fun updateSortingType(sortingType: SortingType) {
+        this.sortingType = sortingType
+        notifyDataSetChanged()
     }
 
     inner class ListingHolder(view: View) : RecyclerView.ViewHolder(view), View.OnClickListener,
@@ -96,6 +125,7 @@ class ListingAdapter(
 
         val headTxtView: TextView = view.findViewById(R.id.noteHeadTxtView)
         val bodyTxtView: TextView = view.findViewById(R.id.noteBodyTxtView)
+        val dateCreatedTxtView: TextView = view.findViewById(R.id.noteDateTxtView)
         val selectedItemView: View = view.findViewById(R.id.selectedItemView)
         val container: View = view.findViewById(R.id.holder_container)
 

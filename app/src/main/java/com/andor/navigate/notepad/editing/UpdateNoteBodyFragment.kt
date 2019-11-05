@@ -74,7 +74,8 @@ class UpdateNoteBodyFragment : Fragment() {
 
     private fun updateNoteModel(s: Editable) {
         val value = viewModel.getAppStateStream().value!!
-        val newNoteModel = value.selectedNote!!.copy(body = s.toString())
+        val newNoteModel =
+            value.selectedNote!!.copy(body = s.toString(), dateUpdated = System.currentTimeMillis())
         viewModel.insert(newNoteModel)
     }
 
