@@ -5,18 +5,10 @@ import com.andor.navigate.notepad.base.observeOnce
 import com.andor.navigate.notepad.core.AlertEvent
 import com.andor.navigate.notepad.core.EventOnFragment
 import com.andor.navigate.notepad.listing.dao.NoteModel
-import org.junit.Before
 import org.junit.Test
 
 
 class ViewModelTest : BaseUnitTest() {
-
-    @Before
-    fun setUpStreams() {
-        noteViewModel.actionAddNote(EventOnFragment.AddNoteEvent.AddNote(NoteModel()))
-        noteViewModel.actionAddNote(EventOnFragment.AddNoteEvent.AddNote(NoteModel(head = "")))
-
-    }
 
     @Test
     fun addingNoteWithEmptyTitle() {
@@ -49,6 +41,5 @@ class ViewModelTest : BaseUnitTest() {
             assert(alertEvent is AlertEvent.TitleEmptyToast)
         }
     }
-
 
 }
