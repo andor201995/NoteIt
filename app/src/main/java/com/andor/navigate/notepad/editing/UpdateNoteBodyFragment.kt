@@ -9,7 +9,7 @@ import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import com.andor.navigate.notepad.R
 import com.andor.navigate.notepad.core.NoteViewModel
 import com.andor.navigate.notepad.core.Utils
@@ -24,7 +24,7 @@ class UpdateNoteBodyFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProviders.of(activity!!).get(NoteViewModel::class.java)
+        viewModel = ViewModelProvider(activity!!).get(NoteViewModel::class.java)
 
         viewModel.getAppStateStream().value?.let { appState ->
 

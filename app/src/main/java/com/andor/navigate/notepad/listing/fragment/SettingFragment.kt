@@ -9,7 +9,7 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.FrameLayout
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment.findNavController
 import com.andor.navigate.notepad.R
 import com.andor.navigate.notepad.core.ListingType
@@ -35,7 +35,7 @@ class SettingFragment : BottomSheetDialogFragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProviders.of(activity!!).get(NoteViewModel::class.java)
+        viewModel = ViewModelProvider(activity!!).get(NoteViewModel::class.java)
 
         //init setting background
         viewModel.getAppStateStream().value!!.let {
