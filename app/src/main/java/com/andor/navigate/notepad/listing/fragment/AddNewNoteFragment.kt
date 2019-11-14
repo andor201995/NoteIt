@@ -93,16 +93,16 @@ class AddNewNoteFragment : BottomSheetDialogFragment() {
                 bg = selectedBGType,
                 dateCreated = System.currentTimeMillis()
             )
-            viewModel.actionAddNote(EventOnFragment.AddNoteEvent.AddNote(noteModel))
+            viewModel.handleFragmentEvent(EventOnFragment.AddNoteEvent.AddNote(noteModel))
 
         }
         newNoteButtonCancel.setOnClickListener {
-            viewModel.actionAddNote(EventOnFragment.AddNoteEvent.Cancel)
+            viewModel.handleFragmentEvent(EventOnFragment.AddNoteEvent.Cancel)
         }
 
         oldNoteUpdateButton.setOnClickListener {
             val noteModel = viewModel.getAppStateStream().value!!.selectedNote!!
-            viewModel.actionAddNote(
+            viewModel.handleFragmentEvent(
                 EventOnFragment.AddNoteEvent.UpdateNote(
                     noteModel.copy(
                         head = newNoteHeadText.text.toString(),

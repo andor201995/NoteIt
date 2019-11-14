@@ -45,7 +45,7 @@ class NoteViewModel(application: Application, uid: String, db: FirebaseFirestore
         appStateRelay.value = appStateRelay.value!!.copy(listingType = listType)
     }
 
-    fun actionAddNote(
+    private fun eventOnAddNote(
         addNoteEvent: EventOnFragment.AddNoteEvent
     ) {
         val noteModel = when (addNoteEvent) {
@@ -78,6 +78,59 @@ class NoteViewModel(application: Application, uid: String, db: FirebaseFirestore
                     appEventRelay.postValue(Event(addNoteEvent))
                 }
             }
+        }
+    }
+
+    /*
+    * All fragment event pass through here for
+    * easy testing and debugging
+    * */
+
+    fun handleFragmentEvent(eventOnFragment: EventOnFragment) {
+        when (eventOnFragment) {
+            is EventOnFragment.AddNoteEvent -> eventOnAddNote(eventOnFragment)
+            is EventOnFragment.ExpandedNoteEvent -> eventOnExpandedNoteFragment(eventOnFragment)
+            is EventOnFragment.ListNoteEvent -> eventOnNoteListingFragment(eventOnFragment)
+            is EventOnFragment.SettingNoteEvent -> eventOnNoteSettingFragment(eventOnFragment)
+            is EventOnFragment.UpdateNoteEvent -> eventOnUpdateNoteFragment(eventOnFragment)
+        }
+        //call appEventRelay is there is a need to update view after event is processed
+
+    }
+
+    private fun eventOnUpdateNoteFragment(eventOnFragment: EventOnFragment.UpdateNoteEvent) {
+        when (eventOnFragment) {
+            is EventOnFragment.UpdateNoteEvent.FragmentStop -> {
+                updateNoteBody(eventOnFragment.newBody)
+            }
+            is EventOnFragment.UpdateNoteEvent.TextChanged -> {
+                updateNoteBody(eventOnFragment.newBody)
+            }
+        }
+    }
+
+    private fun updateNoteBody(newBody: String) {
+        val value = getAppStateStream().value!!
+        val newNoteModel = value.selectedNote!!.copy(body = newBody)
+        insert(newNoteModel)
+    }
+
+    private fun eventOnNoteSettingFragment(eventOnFragment: EventOnFragment.SettingNoteEvent) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    private fun eventOnNoteListingFragment(eventOnFragment: EventOnFragment.ListNoteEvent) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    private fun eventOnExpandedNoteFragment(eventOnFragment: EventOnFragment.ExpandedNoteEvent) {
+        when (eventOnFragment) {
+            is EventOnFragment.ExpandedNoteEvent.OpenEditNoteBottomSheet -> appEventRelay.postValue(
+                Event(eventOnFragment)
+            )
+            is EventOnFragment.ExpandedNoteEvent.OpenUpdateNoteFragment -> appEventRelay.postValue(
+                Event(eventOnFragment)
+            )
         }
     }
 
