@@ -19,7 +19,8 @@ class NoteViewModel(application: Application, uid: String, db: FirebaseFirestore
     private val repository: NoteRepoImpl = NoteRepoImpl(db) {
         when (it) {
             is RepoEvent.UpdateAllNoteModel -> {
-                appStateRelay.postValue(appStateRelay.value!!.copy(listOfAllNotes = it.noteModelList))
+                val sortedList = sortList(appStateRelay.value!!.sortingType, it.noteModelList)
+                appStateRelay.postValue(appStateRelay.value!!.copy(listOfAllNotes = sortedList))
             }
             is RepoEvent.InsertNoteModel -> {
                 appStateRelay.postValue(appStateRelay.value!!.copy(selectedNote = it.noteModel))
@@ -85,7 +86,20 @@ class NoteViewModel(application: Application, uid: String, db: FirebaseFirestore
     }
 
     fun changeSortingType(sortingType: SortingType) {
-        appStateRelay.value = appStateRelay.value!!.copy(sortingType = sortingType)
+        val sortedList = sortList(sortingType, appStateRelay.value!!.listOfAllNotes)
+        appStateRelay.value =
+            appStateRelay.value!!.copy(sortingType = sortingType, listOfAllNotes = sortedList)
+    }
+
+    private fun sortList(
+        sortingType: SortingType,
+        noteList: ArrayList<NoteModel>
+    ): ArrayList<NoteModel> {
+        return when (sortingType) {
+            is SortingType.Alphabet -> ArrayList(noteList.sortedBy { it.head })
+            is SortingType.DateUpdated -> ArrayList(noteList.sortedBy { -it.dateUpdated })
+            is SortingType.DateCreated -> ArrayList(noteList.sortedBy { -it.dateCreated })
+        }
     }
 
 
