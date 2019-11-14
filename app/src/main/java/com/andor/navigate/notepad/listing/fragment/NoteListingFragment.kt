@@ -173,6 +173,7 @@ class NoteListingFragment : Fragment() {
             }
 
             this.listingAdapter = (listRecyclerView.adapter as ListingAdapter)
+
             this.listingAdapter.updateRecyclerView(noteList)
         }
     }

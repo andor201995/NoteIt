@@ -76,7 +76,9 @@ class UpdateNoteBodyFragment : Fragment() {
         val value = viewModel.getAppStateStream().value!!
         val newNoteModel =
             value.selectedNote!!.copy(body = s.toString(), dateUpdated = System.currentTimeMillis())
-        viewModel.insert(newNoteModel)
+        if (value.selectedNote.body != s.toString()) {
+            viewModel.insert(newNoteModel)
+        }
     }
 
     override fun onCreateView(
