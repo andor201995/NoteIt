@@ -10,7 +10,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.andor.navigate.notepad.R
-import com.andor.navigate.notepad.core.Utils
+import com.andor.navigate.notepad.core.*
 import com.andor.navigate.notepad.listing.dao.NoteModel
 import java.text.DateFormat
 import java.util.*
@@ -84,7 +84,12 @@ class ListingAdapter(
     }
 
     fun updateRecyclerView(newNoteList: List<NoteModel>) {
-        val diffResult = DiffUtil.calculateDiff(MyDiffCallback(this.noteList, newNoteList))
+        val diffResult = DiffUtil.calculateDiff(
+            MyDiffCallback(
+                this.noteList,
+                newNoteList
+            )
+        )
         (noteList as ArrayList).clear()
         noteList.addAll(newNoteList)
         noteFilterFullList.clear()
@@ -132,43 +137,7 @@ class ListingAdapter(
 
 }
 
-class MyDiffCallback(
-    private val oldNoteList: List<NoteModel>,
-    private val newNoteList: List<NoteModel>
-) :
-    DiffUtil.Callback() {
-
-    override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        return oldNoteList[oldItemPosition].id == newNoteList[newItemPosition].id
-    }
-
-    override fun getOldListSize(): Int {
-        return oldNoteList.size
-    }
-
-    override fun getNewListSize(): Int {
-        return newNoteList.size
-    }
-
-    override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        return oldNoteList[oldItemPosition] == newNoteList[newItemPosition]
-    }
-
-}
-
 sealed class ListItemEvent {
     data class SingleClickEvent(val noteModel: NoteModel) : ListItemEvent()
     data class LongClickEvent(val noteModel: NoteModel) : ListItemEvent()
-}
-
-fun View.visible() {
-    this.visibility = View.VISIBLE
-}
-
-fun View.inVisible() {
-    this.visibility = View.GONE
-}
-
-fun View.isVisible(): Boolean {
-    return this.visibility == View.VISIBLE
 }
