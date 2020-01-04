@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "160192871340",
+    "firebase_url": "https://noteit-201995.firebaseio.com",
+    "project_id": "noteit-201995",
+    "storage_bucket": "noteit-201995.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:160192871340:android:9146c72f5d9259b1",
+        "android_client_info": {
+          "package_name": "com.andor.navigate.notepad"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "160192871340-fk59u0get7gj6i946u9pocoarirki3me.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.andor.navigate.notepad",
+            "certificate_hash": "484c454a265196cfc1a08b910c5578e7c503d079"
+          }
+        },
+        {
+          "client_id": "160192871340-gl6j7q6o2u2lc9qkgc0hpirfcivi7sni.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBXUccYPIb_Ma7St8ANoorSUxtpO66Ve1A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "160192871340-5j2dfokl6e6tgq9hdld5bbphd72sdt2d.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
