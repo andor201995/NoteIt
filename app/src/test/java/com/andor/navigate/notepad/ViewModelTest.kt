@@ -6,8 +6,10 @@ import com.andor.navigate.notepad.core.AlertEvent
 import com.andor.navigate.notepad.core.EventOnFragment
 import com.andor.navigate.notepad.listing.dao.NoteModel
 import org.junit.Test
+import org.junit.runner.RunWith
+import org.junit.runners.JUnit4
 
-
+@RunWith(JUnit4::class)
 class ViewModelTest : BaseUnitTest() {
 
     @Test

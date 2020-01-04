@@ -7,12 +7,9 @@ import com.andor.navigate.notepad.core.NoteViewModel
 import com.google.firebase.firestore.FirebaseFirestore
 import org.junit.Before
 import org.junit.Rule
-import org.junit.runner.RunWith
-import org.junit.runners.JUnit4
 import org.mockito.Mockito
 
 
-@RunWith(JUnit4::class)
 open class BaseUnitTest {
 
     lateinit var noteViewModel: NoteViewModel
